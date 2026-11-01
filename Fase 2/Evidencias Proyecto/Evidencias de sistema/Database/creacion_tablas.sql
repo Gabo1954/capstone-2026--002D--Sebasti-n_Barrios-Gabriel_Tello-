@@ -21,8 +21,7 @@ CREATE TYPE enum_banco AS ENUM (
     'BCI', 
     'B Chile', 
     'B Falabella',
-	'B Estado'
-
+    'B Estado'
 );
 
 CREATE TYPE enum_tipo_pago AS ENUM (
@@ -41,7 +40,7 @@ CREATE TYPE enum_condicion AS ENUM (
 CREATE TYPE enum_tipo_flujo AS ENUM (
     'FIJO', 
     'VARIABLE',
-	'N/'
+    'N/'
 );
 
 CREATE TYPE enum_rol_usuario AS ENUM (
@@ -72,7 +71,7 @@ CREATE TABLE usuarios (
 
 CREATE TABLE proyectos (
     id_proyecto SERIAL PRIMARY KEY,
-    nombre_proyecto VARCHAR(150) UNIQUE NOT NULL, -- Nombre del proyecto como en Excel (ej: "0.3 Licanten 3299-23-L126")
+    nombre_proyecto VARCHAR(150) UNIQUE NOT NULL, -- Nombre del proyecto como en Excel
     estado enum_estado_proyecto DEFAULT 'ACTIVO',
     presupuesto_total NUMERIC(15,2) DEFAULT 0.00,
     fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -107,7 +106,7 @@ CREATE TABLE registro_movimientos (
     iva NUMERIC(15,2) DEFAULT 0.00,                                     -- 9. IVA
     imposiciones_retenciones NUMERIC(15,2) DEFAULT 0.00,                -- 10. Imposiciones/retenciones
     total NUMERIC(15,2) NOT NULL,                                       -- 11. Total
-    proyecto VARCHAR(150) NOT NULL,                                     -- 12. Proyecto (ej: GENERAL, 0.3 Licanten...)
+    proyecto VARCHAR(150) NOT NULL,                                     -- 12. Proyecto
     condicion enum_condicion NOT NULL,                                  -- 13. Condición
     tipo_flujo enum_tipo_flujo NOT NULL,                                -- 14. Tipo de flujo
     descripcion TEXT,                                                   -- 15. Descripción

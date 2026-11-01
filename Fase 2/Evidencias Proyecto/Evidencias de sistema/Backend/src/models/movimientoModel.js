@@ -33,7 +33,6 @@ const crearMovimiento = async (movimiento) => {
     return result.rows[0];
 };
 
-// NUEVA FUNCIÓN: Actualizar estado de conciliación o descripción
 const actualizarMovimiento = async (id, datosActualizados) => {
     const { estado_conciliacion, descripcion } = datosActualizados;
     const result = await pool.query(
