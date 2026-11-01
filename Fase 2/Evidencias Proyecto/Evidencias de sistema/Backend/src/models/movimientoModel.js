@@ -24,27 +24,32 @@ const crearMovimiento = async (movimiento) => {
     `;
 
     const values = [
-        documento, 
-        estado_conciliacion || 'PENDIENTE', 
-        nro_documento || null, 
-        razon_social,
-        fecha, 
-        banco || null, 
-        tipo_pago || null, 
-        neto_liquido || 0, 
-        iva || 0, 
-        imposiciones_retenciones || 0,
-        total, 
-        proyecto, 
-        condicion, 
-        tipo_flujo, 
-        descripcion || null,
-        true,
-        id_proyecto || null
+        documento, estado_conciliacion || 'PENDIENTE', nro_documento || null, razon_social,
+        fecha, banco || null, tipo_pago || null, neto_liquido || 0, iva || 0, imposiciones_retenciones || 0,
+        total, proyecto, condicion, tipo_flujo, descripcion || null, true, id_proyecto || null
     ];
 
     const result = await pool.query(query, values);
     return result.rows[0];
 };
 
-module.exports = { obtenerMovimientos, crearMovimiento };
+// NUEVA FUNCIÓN: Actualizar estado de conciliación o descripción
+const actualizarMovimiento = async (id, datosActualizados) => {
+    const { estado_conciliacion, descripcion } = datosActualizados;
+    const result = await pool.query(
+        'UPDATE registro_movimientos SET estado_conciliacion = COALESCE($1, estado_conciliacion), descripcion = COALESCE($2, descripcion) WHERE id_movimiento = $3 RETURNING *',
+        [estado_conciliacion, descripcion, id]
+    );
+    return result.rows[0];
+};
+
+// NUEVA FUNCIÓN: Eliminar movimiento
+const eliminarMovimiento = async (id) => {
+    const result = await pool.query(
+        'DELETE FROM registro_movimientos WHERE id_movimiento = $1 RETURNING *',
+        [id]
+    );
+    return result.rows[0];
+};
+
+module.exports = { obtenerMovimientos, crearMovimiento, actualizarMovimiento, eliminarMovimiento };

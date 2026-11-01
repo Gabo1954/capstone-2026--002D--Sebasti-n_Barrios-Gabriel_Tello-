@@ -26,4 +26,36 @@ const createMovimiento = async (req, res) => {
     }
 };
 
-module.exports = { getMovimientos, createMovimiento };
+// NUEVO CONTROLADOR: Actualizar
+const updateMovimiento = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const movimientoActualizado = await Movimiento.actualizarMovimiento(id, req.body);
+        
+        if (!movimientoActualizado) {
+            return res.status(404).json({ error: 'Movimiento no encontrado' });
+        }
+        res.status(200).json(movimientoActualizado);
+    } catch (error) {
+        console.error('Error al actualizar movimiento:', error);
+        res.status(500).json({ error: 'Error al actualizar el registro' });
+    }
+};
+
+// NUEVO CONTROLADOR: Eliminar
+const deleteMovimiento = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const movimientoEliminado = await Movimiento.eliminarMovimiento(id);
+        
+        if (!movimientoEliminado) {
+            return res.status(404).json({ error: 'Movimiento no encontrado para eliminar' });
+        }
+        res.status(200).json({ mensaje: 'Movimiento eliminado con éxito', registro: movimientoEliminado });
+    } catch (error) {
+        console.error('Error al eliminar movimiento:', error);
+        res.status(500).json({ error: 'Error al eliminar el registro' });
+    }
+};
+
+module.exports = { getMovimientos, createMovimiento, updateMovimiento, deleteMovimiento };
