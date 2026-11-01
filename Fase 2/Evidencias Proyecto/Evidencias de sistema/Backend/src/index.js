@@ -2,16 +2,30 @@ const express = require('express');
 const cors = require('cors');
 require('dotenv').config();
 const db = require('./config/db');
-const { swaggerDocs } = require('./swagger/swagger'); // Importar Swagger
+const { swaggerDocs } = require('./swagger/swagger'); 
+
+// 1. Importar rutas
+const proyectoRoutes = require('./routes/proyectoRoutes');
+const movimientoRoutes = require('./routes/movimientoRoutes');
+const usuarioRoutes = require('./routes/usuarioRoutes');
+const proyeccionRoutes = require('./routes/proyeccionRoutes');
+const cargaRoutes = require('./routes/cargaRoutes');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Middlewares
+// 2. Middlewares
 app.use(cors());
 app.use(express.json());
 
-// Ruta principal de salud / prueba de la API
+// 3. Usar rutas
+app.use('/api/proyectos', proyectoRoutes);
+app.use('/api/movimientos', movimientoRoutes);
+app.use('/api/usuarios', usuarioRoutes);
+app.use('/api/proyecciones', proyeccionRoutes);
+app.use('/api/cargas', cargaRoutes); // Registrar nueva ruta
+
+// 4. Ruta principal
 /**
  * @swagger
  * /:
@@ -20,8 +34,6 @@ app.use(express.json());
  *     responses:
  *       200:
  *         description: Conexión exitosa a la base de datos.
- *       500:
- *         description: Error al conectar con la base de datos.
  */
 app.get('/', async (req, res) => {
   try {
@@ -37,8 +49,8 @@ app.get('/', async (req, res) => {
   }
 });
 
-// Iniciar servidor HTTP
+// 5. Iniciar servidor
 app.listen(PORT, () => {
   console.log(`Servidor ejecutándose en http://localhost:${PORT}`);
-  swaggerDocs(app); // Inicializar la documentación interactiva en /api-docs
+  swaggerDocs(app); 
 });
