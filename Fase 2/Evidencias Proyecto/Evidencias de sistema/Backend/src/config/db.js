@@ -7,14 +7,13 @@ const pool = new Pool({
   database: process.env.DB_NAME,
   password: process.env.DB_PASSWORD,
   port: process.env.DB_PORT,
-  ssl: {
-    rejectUnauthorized: false
-  },
+  ssl: process.env.DB_HOST === 'localhost' ? false : { rejectUnauthorized: false },
   connectionTimeoutMillis: 5000
 });
 
 pool.on('connect', () => {
-  console.log('¡Conexión exitosa a la Base de Datos en Bluehosting! 🚀');
+  const entorno = process.env.DB_HOST === 'localhost' ? 'Local' : 'Nube (Render)';
+  console.log(`¡Conexión exitosa a la Base de Datos en entorno ${entorno}! 🚀`);
 });
 
 module.exports = pool;
