@@ -1,7 +1,9 @@
+# Ignorar dependencias en cualquier subcarpeta
 node_modules/
+**/node_modules/
+
+# Archivos de entorno y construcciones
 .env
-.env.local
-.env.*
-build/
+*.env
 dist/
-.DS_Store
+build/
