@@ -236,7 +236,7 @@ export default function MovimientosPage() {
               onClick={() => { setBusqueda(''); setFiltroEstado('TODOS'); setFiltroBanco('TODOS'); setFiltroCondicion('TODOS'); }}
               style={{ ...btnSecondaryStyle, padding: '5px 8px', fontSize: '11px', width: '100%' }}
             >
-              🧹 Limpiar
+               Limpiar
             </button>
           </div>
         )}
@@ -317,10 +317,10 @@ export default function MovimientosPage() {
                         <td>{m.documento_4 || '-'}</td>
                         <td style={{ display: 'flex', gap: '4px' }}>
                           <button onClick={() => handleAbrirEditar(m)} style={btnEditStyle} title="Editar todos los campos">
-                            ✏️ Editar
+                             Editar
                           </button>
                           <button onClick={() => handleEliminar(m.id_movimiento)} style={btnDeleteStyle} title="Eliminar de BD">
-                            🗑️
+                            Eliminar
                           </button>
                         </td>
                       </tr>
@@ -349,7 +349,7 @@ export default function MovimientosPage() {
                 onClick={() => setPaginaActual((prev) => prev + 1)}
                 style={{ ...btnSecondaryStyle, opacity: paginaActual >= totalPaginas ? 0.5 : 1, cursor: paginaActual >= totalPaginas ? 'not-allowed' : 'pointer' }}
               >
-                Siguiente ▶
+                Siguiente 
               </button>
             </div>
           </div>
