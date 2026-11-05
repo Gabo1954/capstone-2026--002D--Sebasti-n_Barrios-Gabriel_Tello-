@@ -12,10 +12,20 @@ export default function Layout({ children }) {
   ];
 
   return (
-    <div style={{ display: 'flex', minHeight: '100vh', fontFamily: 'sans-serif', backgroundColor: '#F8FAFC', width: '100vw', overflowX: 'hidden' }}>
+    <div style={{ display: 'flex', minHeight: '100vh', width: '100%', backgroundColor: '#F8FAFC', margin: 0, padding: 0, boxSizing: 'border-box' }}>
       
-      {/* SIDEBAR (MENÚ LATERAL) */}
-      <aside style={{ width: '220px', minWidth: '220px', backgroundColor: '#0F172A', color: 'white', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', padding: '20px 12px', boxSizing: 'border-box' }}>
+      {/* SIDEBAR LATERAL FIJO */}
+      <aside style={{ 
+        width: '220px', 
+        minWidth: '220px', 
+        backgroundColor: '#0F172A', 
+        color: 'white', 
+        display: 'flex', 
+        flexDirection: 'column', 
+        justify: 'space-between', 
+        padding: '20px 12px',
+        boxSizing: 'border-box'
+      }}>
         <div>
           <div style={{ padding: '0 12px 20px 12px', borderBottom: '1px solid #1E293B', marginBottom: '20px' }}>
             <h3 style={{ margin: 0, color: '#38BDF8', fontSize: '18px' }}>API ZORON</h3>
@@ -55,11 +65,11 @@ export default function Layout({ children }) {
         </div>
       </aside>
 
-      {/* CONTENIDO PRINCIPAL CON CONTROL DE ANCHO EXACTO */}
-      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0, maxWidth: 'calc(100vw - 220px)', overflowX: 'hidden' }}>
+      {/* ÁREA DE CONTENIDO PERFECTAMENTE CENTRADA */}
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0, boxSizing: 'border-box' }}>
         
         {/* Navbar Superior */}
-        <header style={{ height: '56px', backgroundColor: '#FFFFFF', borderBottom: '1px solid #E2E8F0', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 24px' }}>
+        <header style={{ height: '56px', backgroundColor: '#FFFFFF', borderBottom: '1px solid #E2E8F0', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 24px', boxSizing: 'border-box' }}>
           <h4 style={{ margin: 0, color: '#334155', fontWeight: '500' }}>
             Plataforma de Control de Gestión y Finanzas
           </h4>
@@ -68,8 +78,8 @@ export default function Layout({ children }) {
           </span>
         </header>
 
-        {/* Área donde cargan las vistas */}
-        <main style={{ flex: 1, padding: '16px 20px', overflowY: 'auto', overflowX: 'hidden', boxSizing: 'border-box' }}>
+        {/* main con padding limpio */}
+        <main style={{ flex: 1, padding: '24px', overflowY: 'auto', boxSizing: 'border-box' }}>
           {children}
         </main>
       </div>
