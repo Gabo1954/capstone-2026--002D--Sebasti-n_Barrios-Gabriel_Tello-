@@ -258,7 +258,7 @@ export default function CargaMasivaPage() {
                 cursor: cargando ? 'not-allowed' : 'pointer'
               }}
             >
-              {cargando ? 'Guardando en BD...' : '🚀 Confirmar y Guardar en BD'}
+              {cargando ? 'Guardando en BD...' : ' Confirmar y Guardar en BD'}
             </button>
           </div>
 
