@@ -1,6 +1,12 @@
 const express = require('express');
 const router = express.Router();
-const { getMovimientos, createMovimiento, updateMovimiento, deleteMovimiento } = require('../controllers/movimientoController');
+const { 
+  getMovimientos, 
+  createMovimiento, 
+  createCargaMasiva, 
+  updateMovimiento, 
+  deleteMovimiento 
+} = require('../controllers/movimientoController');
 
 /**
  * @swagger
@@ -40,6 +46,33 @@ router.get('/', getMovimientos);
  *         description: Movimiento registrado con éxito
  */
 router.post('/', createMovimiento);
+
+/**
+ * @swagger
+ * /api/movimientos/carga-masiva:
+ *   post:
+ *     summary: Importa un lote de movimientos financieros desde una planilla Excel
+ *     tags: [Movimientos]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               movimientos:
+ *                 type: array
+ *                 items:
+ *                   type: object
+ *     responses:
+ *       201:
+ *         description: Carga masiva completada con éxito
+ *       400:
+ *         description: Formato de datos no válido
+ *       500:
+ *         description: Error interno al registrar en la base de datos
+ */
+router.post('/carga-masiva', createCargaMasiva);
 
 /**
  * @swagger

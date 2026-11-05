@@ -14,19 +14,53 @@ const createMovimiento = async (req, res) => {
     try {
         const { documento, razon_social, fecha, total, proyecto, condicion, tipo_flujo } = req.body;
         
-        if (!documento || !razon_social || !fecha || total === undefined || !proyecto || !condicion || !tipo_flujo) {
-            return res.status(400).json({ error: 'Faltan campos obligatorios para registrar el movimiento' });
+        if (!razon_social || total === undefined) {
+            return res.status(400).json({ error: 'Razón social y total son campos obligatorios.' });
         }
 
-        const nuevoMovimiento = await Movimiento.crearMovimiento(req.body);
+        const movimientoSanitizado = {
+            ...req.body,
+            documento: documento || 'FACTURA',
+            fecha: fecha || new Date().toISOString().split('T')[0],
+            proyecto: proyecto || 'GENERAL',
+            condicion: condicion || 'GASTO',
+            tipo_flujo: tipo_flujo || 'VARIABLE'
+        };
+
+        const nuevoMovimiento = await Movimiento.crearMovimiento(movimientoSanitizado);
         res.status(201).json(nuevoMovimiento);
     } catch (error) {
-        console.error('Error al crear movimiento:', error);
-        res.status(500).json({ error: 'Error al registrar el movimiento' });
+        console.error('Error al crear movimiento individual:', error);
+        res.status(500).json({ 
+            error: 'Error al registrar el movimiento en PostgreSQL', 
+            detalle: error.message 
+        });
     }
 };
 
-// NUEVO CONTROLADOR: Actualizar
+const createCargaMasiva = async (req, res) => {
+    try {
+        const { movimientos } = req.body;
+
+        if (!movimientos || !Array.isArray(movimientos) || movimientos.length === 0) {
+            return res.status(400).json({ error: 'Se requiere un arreglo "movimientos" válido.' });
+        }
+
+        const insertados = await Movimiento.crearMovimientosMasivos(movimientos);
+
+        res.status(201).json({
+            mensaje: 'Carga masiva completada con éxito',
+            insertados: insertados.length
+        });
+    } catch (error) {
+        console.error('Error en carga masiva:', error);
+        res.status(500).json({ 
+            error: 'Error al registrar la carga masiva en PostgreSQL', 
+            detalle: error.message 
+        });
+    }
+};
+
 const updateMovimiento = async (req, res) => {
     try {
         const { id } = req.params;
@@ -42,7 +76,6 @@ const updateMovimiento = async (req, res) => {
     }
 };
 
-// NUEVO CONTROLADOR: Eliminar
 const deleteMovimiento = async (req, res) => {
     try {
         const { id } = req.params;
@@ -58,4 +91,10 @@ const deleteMovimiento = async (req, res) => {
     }
 };
 
-module.exports = { getMovimientos, createMovimiento, updateMovimiento, deleteMovimiento };
+module.exports = { 
+    getMovimientos, 
+    createMovimiento, 
+    createCargaMasiva, 
+    updateMovimiento, 
+    deleteMovimiento 
+};
