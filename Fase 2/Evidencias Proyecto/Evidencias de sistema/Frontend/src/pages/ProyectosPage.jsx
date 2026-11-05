@@ -44,14 +44,14 @@ export default function ProyectosPage() {
     <div style={{ padding: '20px', width: '100%', boxSizing: 'border-box' }}>
       <div style={{ marginBottom: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div>
-          <h2 style={{ margin: 0, color: '#1E293B' }}>📁 Gestión de Proyectos</h2>
+          <h2 style={{ margin: 0, color: '#1E293B' }}>Gestión de Proyectos</h2>
           <span style={{ fontSize: '13px', color: '#64748B' }}>
             Resumen financiero y control por centro de costo / proyecto
           </span>
         </div>
         <input
           type="text"
-          placeholder="🔍 Buscar proyecto..."
+          placeholder="Buscar proyecto..."
           value={busqueda}
           onChange={(e) => setBusqueda(e.target.value)}
           style={{
@@ -95,9 +95,9 @@ export default function ProyectosPage() {
               >
                 <h3 style={{ margin: '0 0 8px 0', fontSize: '16px', color: '#0F172A' }}>{p.proyecto || 'GENERAL'}</h3>
                 <div style={{ fontSize: '12px', color: '#64748B', display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                  <div>📥 Ingresos: <strong>${ingresos.toLocaleString('es-CL')}</strong></div>
-                  <div>📤 Egresos: <strong>${egresos.toLocaleString('es-CL')}</strong></div>
-                  <div>📊 Margen: <strong style={{ color: margen >= 0 ? '#16A34A' : '#DC2626' }}>${margen.toLocaleString('es-CL')}</strong></div>
+                  <div>Ingresos: <strong>${ingresos.toLocaleString('es-CL')}</strong></div>
+                  <div>Egresos: <strong>${egresos.toLocaleString('es-CL')}</strong></div>
+                  <div>Margen: <strong style={{ color: margen >= 0 ? '#16A34A' : '#DC2626' }}>${margen.toLocaleString('es-CL')}</strong></div>
                   <div style={{ marginTop: '6px', fontSize: '11px', color: '#94A3B8' }}>{p.total_movimientos} movimientos registrados</div>
                 </div>
               </div>
@@ -110,7 +110,7 @@ export default function ProyectosPage() {
       {proyectoSeleccionado && (
         <div style={{ backgroundColor: '#FFFFFF', padding: '20px', borderRadius: '8px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
-            <h3 style={{ margin: 0, color: '#1E293B' }}>📋 Movimientos de: {proyectoSeleccionado}</h3>
+            <h3 style={{ margin: 0, color: '#1E293B' }}>Movimientos de Proyecto: <br /> {proyectoSeleccionado}</h3>
             <button
               onClick={() => setProyectoSeleccionado(null)}
               style={{ padding: '4px 12px', backgroundColor: '#64748B', color: '#FFF', border: 'none', borderRadius: '4px', cursor: 'pointer' }}

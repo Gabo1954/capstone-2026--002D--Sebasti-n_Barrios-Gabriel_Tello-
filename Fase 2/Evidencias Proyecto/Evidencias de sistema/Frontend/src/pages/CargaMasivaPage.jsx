@@ -18,21 +18,92 @@ export default function CargaMasivaPage() {
   const [cargando, setCargando] = useState(false);
   const [mensaje, setMensaje] = useState(null);
 
+  // 1. Limpieza y normalización para CLP (Pesos Chilenos)
   const limpiarNumero = (valor) => {
     if (valor === undefined || valor === null || valor === '') return 0;
-    if (typeof valor === 'number') return isNaN(valor) ? 0 : valor;
     
-    const limpio = String(valor)
-      .replace(/\$/g, '')
-      .replace(/\./g, '')
-      .replace(/\s/g, '')
-      .replace(/,/g, '.');
+    // Si viene como número (ej: 67.334 porque Excel lo interpretó con decimales)
+    if (typeof valor === 'number') {
+      if (isNaN(valor)) return 0;
       
-    const num = parseFloat(limpio);
-    return isNaN(num) ? 0 : num;
+      // Si el número tiene decimales pero en CLP no usamos decimales (ej: 67.334),
+      // verificamos si es un caso de punto de mil interpretado como decimal
+      const strVal = String(valor);
+      if (strVal.includes('.') && strVal.split('.')[1].length === 3) {
+        return Math.round(valor * 1000);
+      }
+      return Math.round(valor);
+    }
+    
+    let str = String(valor).trim().replace(/\$/g, '').replace(/\s/g, '');
+
+    if (str.includes('.') && str.includes(',')) {
+      str = str.replace(/\./g, '').replace(',', '.');
+    } else if (str.includes(',')) {
+      str = str.replace(',', '.');
+    } else if (str.includes('.')) {
+      const partes = str.split('.');
+      if (partes.length > 2 || (partes.length === 2 && partes[1].length === 3)) {
+        str = partes.join('');
+      }
+    }
+      
+    const num = parseFloat(str);
+    return isNaN(num) ? 0 : Math.round(num);
   };
 
-  // Validar y ajustar valores contra los ENUMs reales de PostgreSQL
+  // Parser ultra robusto para fechas de Excel
+  const formatearFechaChile = (fechaRaw) => {
+    if (!fechaRaw) return new Date().toISOString().split('T')[0];
+
+    // Caso 1: Si Excel entrega un número de serie de fecha (ej: 45565)
+    if (typeof fechaRaw === 'number') {
+      const fechaObj = XLSX.SSF.parse_date_code(fechaRaw);
+      if (fechaObj) {
+        const dia = String(fechaObj.d).padStart(2, '0');
+        const mes = String(fechaObj.m).padStart(2, '0');
+        const anio = fechaObj.y;
+        return `${anio}-${mes}-${dia}`;
+      }
+    }
+
+    // Caso 2: Si viene como objeto Date de JS
+    if (fechaRaw instanceof Date && !isNaN(fechaRaw)) {
+      const dia = String(fechaRaw.getDate()).padStart(2, '0');
+      const mes = String(fechaRaw.getMonth() + 1).padStart(2, '0');
+      const anio = fechaRaw.getFullYear();
+      return `${anio}-${mes}-${dia}`;
+    }
+
+    const str = String(fechaRaw).trim();
+
+    // Caso 3: DD-MM-YYYY o DD/MM/YYYY (ej: 30-09-2026, 30/9/2026)
+    if (/^\d{1,2}[\/-]\d{1,2}[\/-]\d{4}/.test(str)) {
+      const partes = str.split(/[\/-]/);
+      const dia = partes[0].padStart(2, '0');
+      const mes = partes[1].padStart(2, '0');
+      const anio = partes[2];
+      return `${anio}-${mes}-${dia}`;
+    }
+
+    // Caso 4: YYYY-MM-DD (ej: 2026-09-30)
+    if (/^\d{4}-\d{2}-\d{2}/.test(str)) {
+      return str.split('T')[0];
+    }
+
+    // Caso 5: Intento estándar de parseo
+    const parsedDate = new Date(str);
+    if (!isNaN(parsedDate.getTime())) {
+      const dia = String(parsedDate.getUTCDate()).padStart(2, '0');
+      const mes = String(parsedDate.getUTCMonth() + 1).padStart(2, '0');
+      const anio = parsedDate.getUTCFullYear();
+      return `${anio}-${mes}-${dia}`;
+    }
+
+    // Si todo falla, retorna la fecha de hoy
+    return new Date().toISOString().split('T')[0];
+  };
+
   const validarEnum = (valor, listaPermitida, valorPorDefecto) => {
     if (!valor) return valorPorDefecto;
     const str = String(valor).trim().toUpperCase();
@@ -52,7 +123,8 @@ export default function CargaMasivaPage() {
     reader.onload = (e) => {
       try {
         const data = new Uint8Array(e.target.result);
-        const workbook = XLSX.read(data, { type: 'array', cellFormulas: true });
+        // cellDates: true permite a XLSX parsear fechas reales
+        const workbook = XLSX.read(data, { type: 'array', cellFormulas: true, cellDates: true });
         
         if (!workbook.SheetNames || workbook.SheetNames.length === 0) {
           setMensaje({ tipo: 'error', texto: 'El libro de Excel no contiene hojas válidas.' });
@@ -64,7 +136,12 @@ export default function CargaMasivaPage() {
         ) || workbook.SheetNames[0];
 
         const hoja = workbook.Sheets[nombreHoja];
-        const JSONDatos = XLSX.utils.sheet_to_json(hoja, { raw: false, defval: '' });
+
+        // 1. Cambiamos 'raw: false' a 'raw: true'
+        const JSONDatos = XLSX.utils.sheet_to_json(hoja, { raw: true, defval: '' });
+
+        // 2. Agregamos el console.log justo después para inspeccionar en la consola de F12
+        console.log('FILA ORIGINAL DESDE EXCEL:', JSONDatos[0]);
 
         if (JSONDatos.length === 0) {
           setMensaje({ tipo: 'error', texto: `La hoja "${nombreHoja}" está vacía.` });
@@ -72,54 +149,55 @@ export default function CargaMasivaPage() {
         }
 
         const mapeados = JSONDatos.map((fila, index) => {
-          const getCampo = (nombres) => {
-            for (let n of nombres) {
-              if (fila[n] !== undefined && fila[n] !== '') return fila[n];
+          // Buscador súper flexible: ignora tildes, mayúsculas, guiones y espacios
+          const getCampoFlexible = (nombresPosibles) => {
+            const llavesFila = Object.keys(fila);
+            for (let buscado of nombresPosibles) {
+              const buscadoNorm = buscado.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]/g, '');
+              const llaveEncontrada = llavesFila.find(k => 
+                k.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]/g, '') === buscadoNorm
+              );
+              if (llaveEncontrada && fila[llaveEncontrada] !== undefined && fila[llaveEncontrada] !== '') {
+                return fila[llaveEncontrada];
+              }
             }
             return '';
           };
 
-          const neto = limpiarNumero(getCampo(['Neto / líquido', 'Neto/líquido', 'neto_liquido', 'NETO']));
-          const iva = limpiarNumero(getCampo(['IVA', 'iva']));
-          const ret = limpiarNumero(getCampo(['Imposiciones/retenciones', 'imposiciones_retenciones', 'RETENCIONES']));
+          const neto = limpiarNumero(getCampoFlexible(['Neto / líquido', 'Neto / liquido', 'Neto/líquido', 'neto_liquido', 'neto']));
+          const iva = limpiarNumero(getCampoFlexible(['IVA', 'iva']));
+          const ret = limpiarNumero(getCampoFlexible(['Imposiciones/retenciones', 'Imposiciones / retenciones', 'imposiciones_retenciones', 'retenciones']));
           
-          let total = limpiarNumero(getCampo(['Total', 'total', 'TOTAL']));
+          let total = limpiarNumero(getCampoFlexible(['Total', 'total']));
           if (total === 0 && (neto > 0 || iva > 0 || ret > 0)) {
             total = neto + iva + ret;
           }
 
-          let fechaRaw = getCampo(['Fecha', 'fecha', 'FECHA']);
-          let fechaFormateada = new Date().toISOString().split('T')[0];
-          if (fechaRaw) {
-            const parsedDate = new Date(fechaRaw);
-            if (!isNaN(parsedDate.getTime())) {
-              fechaFormateada = parsedDate.toISOString().split('T')[0];
-            }
-          }
-
-          const razonSocial = String(getCampo(['Razón social', 'razon_social', 'RAZON_SOCIAL']) || 'SIN RAZON SOCIAL').trim();
+          const fechaRaw = getCampoFlexible(['Fecha', 'fecha']);
+          const fechaFormateada = formatearFechaChile(fechaRaw);
+          const razonSocial = String(getCampoFlexible(['Razón social', 'Razon social', 'razon_social']) || 'SIN RAZON SOCIAL').trim();
 
           return {
             id_temp: index + 1,
-            documento: validarEnum(getCampo(['Documento', 'documento']), ENUMS_VALIS.documentos, 'FACTURA'),
-            estado_conciliacion: validarEnum(getCampo(['Estado de conciliación', 'estado_conciliacion']), ENUMS_VALIS.estadosConciliacion, 'PENDIENTE'),
-            nro_documento: String(getCampo(['n° de documento', 'nro_documento', 'NRO_DOCUMENTO'])).trim() || 'S/N',
+            documento: validarEnum(getCampoFlexible(['Documento', 'documento']), ENUMS_VALIS.documentos, 'FACTURA'),
+            estado_conciliacion: validarEnum(getCampoFlexible(['Estado de conciliación', 'Estado de conciliacion', 'estado_conciliacion']), ENUMS_VALIS.estadosConciliacion, 'PENDIENTE'),
+            nro_documento: String(getCampoFlexible(['n° de documento', 'n de documento', 'nro_documento', 'n° documento'])).trim() || 'S/N',
             razon_social: razonSocial || 'SIN RAZON SOCIAL',
             fecha: fechaFormateada,
-            banco: validarEnum(getCampo(['Banco', 'banco']), ENUMS_VALIS.bancos, 'BCI'),
-            tipo_pago: validarEnum(getCampo(['Tipo de pago', 'tipo_pago']), ENUMS_VALIS.tiposPago, 'Debito'),
+            banco: validarEnum(getCampoFlexible(['Banco', 'banco']), ENUMS_VALIS.bancos, 'BCI'),
+            tipo_pago: validarEnum(getCampoFlexible(['Tipo de pago', 'tipo_pago']), ENUMS_VALIS.tiposPago, 'Debito'),
             neto_liquido: neto,
             iva: iva,
             imposiciones_retenciones: ret,
             total: total,
-            proyecto: String(getCampo(['Proyecto', 'proyecto']) || 'GENERAL').trim(),
-            condicion: validarEnum(getCampo(['Condición', 'condicion']), ENUMS_VALIS.condiciones, 'GASTO'),
-            tipo_flujo: validarEnum(getCampo(['Tipo de flujo', 'tipo_flujo']), ENUMS_VALIS.tiposFlujo, 'VARIABLE'),
-            descripcion: String(getCampo(['Descripción', 'descripcion']) || '').trim(),
-            documento_1: String(getCampo(['Documento 1']) || '').trim(),
-            documento_2: String(getCampo(['Documento 2']) || '').trim(),
-            documento_3: String(getCampo(['Documento 3']) || '').trim(),
-            documento_4: String(getCampo(['Documento 4']) || '').trim()
+            proyecto: String(getCampoFlexible(['Proyecto', 'proyecto']) || 'GENERAL').trim(),
+            condicion: validarEnum(getCampoFlexible(['Condición', 'Condicion', 'condicion']), ENUMS_VALIS.condiciones, 'GASTO'),
+            tipo_flujo: validarEnum(getCampoFlexible(['Tipo de flujo', 'tipo_flujo']), ENUMS_VALIS.tiposFlujo, 'VARIABLE'),
+            descripcion: String(getCampoFlexible(['Descripción', 'Descripcion', 'descripcion']) || '').trim(),
+            documento_1: String(getCampoFlexible(['Documento 1']) || '').trim(),
+            documento_2: String(getCampoFlexible(['Documento 2']) || '').trim(),
+            documento_3: String(getCampoFlexible(['Documento 3']) || '').trim(),
+            documento_4: String(getCampoFlexible(['Documento 4']) || '').trim()
           };
         });
 
@@ -142,7 +220,6 @@ export default function CargaMasivaPage() {
       setMensaje(null);
 
       const paquete = datosPrevisualizacion.map(({ id_temp, ...resto }) => resto);
-
       const res = await api.post('/movimientos/carga-masiva', { movimientos: paquete });
 
       setMensaje({ 
@@ -165,7 +242,7 @@ export default function CargaMasivaPage() {
   return (
     <div style={{ width: '100%', boxSizing: 'border-box' }}>
       <div style={{ marginBottom: '16px' }}>
-        <h2 style={{ margin: 0, color: '#1E293B', fontSize: '20px' }}>📤 Carga Masiva de Planillas Excel</h2>
+        <h2 style={{ margin: 0, color: '#1E293B', fontSize: '20px' }}>Carga Masiva de Planillas Excel</h2>
         <span style={{ fontSize: '13px', color: '#64748B' }}>
           Importa tu histórico desde la plantilla maestro directamente a PostgreSQL
         </span>
@@ -202,7 +279,7 @@ export default function CargaMasivaPage() {
           marginBottom: '20px'
         }}
       >
-        <div style={{ fontSize: '32px', marginBottom: '8px' }}>📄</div>
+        <div style={{ fontSize: '32px', marginBottom: '8px' }}></div>
         <p style={{ margin: '0 0 4px 0', fontWeight: 'bold', color: '#334155' }}>
           Arrastra y suelta tu archivo Excel (.xlsx) aquí
         </p>

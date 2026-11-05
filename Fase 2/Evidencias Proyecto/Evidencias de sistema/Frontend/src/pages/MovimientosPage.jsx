@@ -196,7 +196,7 @@ export default function MovimientosPage() {
       }}>
         
         <div>
-          <label style={labelFilterStyle}>🔍 Buscar:</label>
+          <label style={labelFilterStyle}>Buscar:</label>
           <input
             type="text"
             placeholder="Razón social, N° doc..."
@@ -342,7 +342,7 @@ export default function MovimientosPage() {
                 onClick={() => setPaginaActual((prev) => prev - 1)}
                 style={{ ...btnSecondaryStyle, opacity: paginaActual === 1 ? 0.5 : 1, cursor: paginaActual === 1 ? 'not-allowed' : 'pointer' }}
               >
-                ◀ Anterior
+                Anterior
               </button>
               <button
                 disabled={paginaActual >= totalPaginas}

@@ -58,7 +58,7 @@ export default function DashboardPage() {
       
       {/* CABECERA */}
       <div style={{ marginBottom: '20px' }}>
-        <h2 style={{ margin: 0, color: '#1E293B', fontSize: '20px' }}>📊 Dashboard - Resumen Financiero</h2>
+        <h2 style={{ margin: 0, color: '#1E293B', fontSize: '20px' }}>Dashboard - Resumen Financiero</h2>
         <span style={{ fontSize: '13px', color: '#64748B' }}>
           Indicadores clave del estado de la empresa
         </span>

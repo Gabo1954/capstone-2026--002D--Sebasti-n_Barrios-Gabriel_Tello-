@@ -28,42 +28,43 @@ const validarEnum = (valor, listaPermitida, valorPorDefecto) => {
   return encontrado || valorPorDefecto;
 };
 
-// Limpieza de montos financieros
 const limpiarNumero = (val) => {
   if (val === null || val === undefined || val === '') return 0;
-  if (typeof val === 'number') return isNaN(val) ? 0 : val;
-  
+  if (typeof val === 'number') return isNaN(val) ? 0 : Math.round(val);
+
   let str = String(val).trim().replace(/\$/g, '').replace(/\s/g, '');
+
   if (str.includes('.') && str.includes(',')) {
     str = str.replace(/\./g, '').replace(',', '.');
-  } else if (str.includes('.')) {
-    str = str.replace(/\./g, '');
   } else if (str.includes(',')) {
     str = str.replace(',', '.');
+  } else if (str.includes('.')) {
+    const partes = str.split('.');
+    if (partes.length > 2 || (partes.length === 2 && partes[1].length === 3)) {
+      str = partes.join('');
+    }
   }
-  
+
   const num = parseFloat(str);
-  return isNaN(num) ? 0 : num;
+  return isNaN(num) ? 0 : Math.round(num);
 };
 
-// Conversión de fechas de Excel (números serie, objetos Date y formato string)
 const parsearFechaExcel = (fechaRaw) => {
   if (!fechaRaw) return new Date().toISOString().split('T')[0];
-
-  if (fechaRaw instanceof Date && !isNaN(fechaRaw)) {
-    return fechaRaw.toISOString().split('T')[0];
-  }
 
   if (typeof fechaRaw === 'number') {
     const fechaEpoch = new Date(Math.round((fechaRaw - 25569) * 86400 * 1000));
     return fechaEpoch.toISOString().split('T')[0];
   }
 
-  const strFecha = String(fechaRaw).trim();
-  if (/^\d{4}-\d{2}-\d{2}/.test(strFecha)) {
-    return strFecha.split('T')[0];
+  if (fechaRaw instanceof Date && !isNaN(fechaRaw)) {
+    const dia = String(fechaRaw.getDate()).padStart(2, '0');
+    const mes = String(fechaRaw.getMonth() + 1).padStart(2, '0');
+    const anio = fechaRaw.getFullYear();
+    return `${anio}-${mes}-${dia}`;
   }
 
+  const strFecha = String(fechaRaw).trim();
   if (/^\d{1,2}[\/-]\d{1,2}[\/-]\d{4}/.test(strFecha)) {
     const partes = strFecha.split(/[\/-]/);
     const dia = partes[0].padStart(2, '0');
@@ -72,9 +73,8 @@ const parsearFechaExcel = (fechaRaw) => {
     return `${anio}-${mes}-${dia}`;
   }
 
-  const parsed = new Date(strFecha);
-  if (!isNaN(parsed.getTime())) {
-    return parsed.toISOString().split('T')[0];
+  if (/^\d{4}-\d{2}-\d{2}/.test(strFecha)) {
+    return strFecha.split('T')[0];
   }
 
   return new Date().toISOString().split('T')[0];
