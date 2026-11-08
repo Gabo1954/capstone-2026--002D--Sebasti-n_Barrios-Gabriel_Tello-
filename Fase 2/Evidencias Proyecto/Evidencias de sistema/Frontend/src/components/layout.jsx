@@ -14,25 +14,46 @@ export default function Layout({ children }) {
   return (
     <div style={{ display: 'flex', minHeight: '100vh', width: '100%', backgroundColor: '#F8FAFC', margin: 0, padding: 0, boxSizing: 'border-box' }}>
       
-      {/* SIDEBAR LATERAL FIJO */}
+      {/* SIDEBAR LATERAL CON COLORES CORPORATIVOS Y LOGO */}
       <aside style={{ 
-        width: '220px', 
-        minWidth: '220px', 
-        backgroundColor: '#0F172A', 
+        width: '240px', 
+        minWidth: '240px', 
+        backgroundColor: '#0D0D0D', 
         color: 'white', 
         display: 'flex', 
         flexDirection: 'column', 
-        justify: 'space-between', 
-        padding: '20px 12px',
-        boxSizing: 'border-box'
+        justifyContent: 'space-between', 
+        padding: '20px 14px',
+        boxSizing: 'border-box',
+        borderRight: '1px solid #1E293B'
       }}>
         <div>
-          <div style={{ padding: '0 12px 20px 12px', borderBottom: '1px solid #1E293B', marginBottom: '20px' }}>
-            <h3 style={{ margin: 0, color: '#38BDF8', fontSize: '18px' }}>API ZORON</h3>
-            <span style={{ fontSize: '11px', color: '#94A3B8' }}>Gestión Financiera</span>
+          {/* ENCABEZADO: LOGO Y MARCA ZORON */}
+          <div style={{ 
+            display: 'flex', 
+            alignItems: 'center', 
+            gap: '12px', 
+            padding: '0 8px 18px 8px', 
+            borderBottom: '1px solid #27272A', 
+            marginBottom: '20px' 
+          }}>
+            <img 
+              src="/logo-zoron.png" 
+              alt="Logo Zoron" 
+              style={{ height: '32px', width: 'auto', objectFit: 'contain' }}
+            />
+            <div>
+              <h3 style={{ margin: 0, color: '#FFCC00', fontSize: '18px', letterSpacing: '1px', fontWeight: 'bold' }}>
+                ZORON
+              </h3>
+              <span style={{ fontSize: '10px', color: '#A1A1AA', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                Gestión Financiera
+              </span>
+            </div>
           </div>
 
-          <nav style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+          {/* MENÚ DE NAVEGACIÓN */}
+          <nav style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
             {menuItems.map((item) => {
               const isActive = location.pathname === item.path;
 
@@ -44,10 +65,10 @@ export default function Layout({ children }) {
                     display: 'block',
                     padding: '10px 14px',
                     borderRadius: '6px',
-                    color: isActive ? '#FFFFFF' : '#94A3B8',
-                    backgroundColor: isActive ? '#0284C7' : 'transparent',
+                    color: isActive ? '#0D0D0D' : '#A1A1AA',
+                    backgroundColor: isActive ? '#FFCC00' : 'transparent',
                     textDecoration: 'none',
-                    fontWeight: isActive ? '600' : '400',
+                    fontWeight: isActive ? '700' : '400',
                     fontSize: '14px',
                     transition: 'all 0.2s'
                   }}
@@ -59,13 +80,14 @@ export default function Layout({ children }) {
           </nav>
         </div>
 
-        <div style={{ borderTop: '1px solid #1E293B', paddingTop: '16px', paddingLeft: '8px', paddingRight: '8px' }}>
+        {/* PIE DEL SIDEBAR / USUARIO */}
+        <div style={{ borderTop: '1px solid #27272A', paddingTop: '16px', paddingLeft: '8px', paddingRight: '8px' }}>
           <div style={{ fontSize: '13px', fontWeight: 'bold', color: '#F8FAFC' }}>Usuario Finanzas</div>
-          <div style={{ fontSize: '11px', color: '#94A3B8' }}>admin@zoron.cl</div>
+          <div style={{ fontSize: '11px', color: '#A1A1AA' }}>admin@zoron.cl</div>
         </div>
       </aside>
 
-      {/* ÁREA DE CONTENIDO PERFECTAMENTE CENTRADA */}
+      {/* ÁREA DE CONTENIDO */}
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0, boxSizing: 'border-box' }}>
         
         {/* Navbar Superior */}
@@ -78,7 +100,7 @@ export default function Layout({ children }) {
           </span>
         </header>
 
-        {/* main con padding limpio */}
+        {/* Contenido principal */}
         <main style={{ flex: 1, padding: '24px', overflowY: 'auto', boxSizing: 'border-box' }}>
           {children}
         </main>

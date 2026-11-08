@@ -1,159 +1,210 @@
 # capstone-2026--002D--Sebasti-n_Barrios-Gabriel_Tello-
 Repositorio GitHub de Proyecto ATP Capstone 2026. Sebastián Barrios y Gabriel Tello
 
+
 # Zoron – Plataforma de Gestión Financiera
 
 ## 1. Descripción del proyecto
 
 El proyecto consiste en el diseño y desarrollo de una plataforma interna para ZORON E.I.R.L., empresa dedicada a la consultoría en sostenibilidad y cambio climático. Su propósito es mejorar la gestión y organización de la información empresarial mediante herramientas tecnológicas que permitan sistematizar procesos internos, facilitar el registro y consulta de información y disponer de dashboards interactivos para apoyar la toma de decisiones.
 
-La solución estará dirigida principalmente a los colaboradores y administración de la empresa, incorporando funcionalidades de acceso restringido, gestión de información y visualización de indicadores. Se busca complementar los procesos actuales de trabajo, manteniendo Excel como fuente de información para esta etapa del proyecto.
+La solución está dirigida a los colaboradores y administración de la empresa, incorporando funcionalidades de acceso restringido, módulo de registro de movimientos financieros, vista de proyectos, carga masiva de planillas Excel y visualización de indicadores.
+
+---
 
 ## 2. Tecnologías utilizadas
 
-Las tecnologías seleccionadas para el desarrollo de la plataforma se organizan de la siguiente manera:
+Las tecnologías seleccionadas e implementadas para el desarrollo de la plataforma se organizan de la siguiente manera:
 
 **Frontend**
-- **React:** Desarrollo de la interfaz de usuario y dashboards interactivos.
+- **React (Vite):** Desarrollo de la interfaz de usuario, gestión del estado reactivo y dashboards interactivos.
+- **React Router DOM:** Enrutamiento cliente-side para la navegación entre páginas (Movimientos, Proyectos, Carga Masiva, Dashboard).
+- **SheetJS (`xlsx`):** Procesamiento cliente-side de archivos binarios `.xlsx` y parseo masivo de celdas mediante `FileReader`.
+- **Axios:** Cliente HTTP para la integración con la API RESTful del backend.
 
 **Backend**
-- **Node.js v24.21.0:** Entorno de ejecución del backend.
-- **Express:** Gestión de solicitudes, lógica de negocio y comunicación con la base de datos.
-
-**Herramientas de desarrollo**
-- **npm 11.19.0:** Administración de dependencias.
-- **npx 11.19.0:** Ejecución de herramientas y paquetes del entorno Node.js.
+- **Node.js (v24.x):** Entorno de ejecución asíncrono para el servidor.
+- **Express:** Framework web para la arquitectura de la API REST, enrutamiento, controladores y middlewares.
+- **`pg` (node-postgres):** Conector nativo a PostgreSQL con soporte para pool de conexiones y transacciones atómicas.
+- **CORS & Dotenv:** Gestión de seguridad entre dominios y variables de entorno.
 
 **Base de datos**
-- **PostgreSQL:** Almacenamiento y organización de la información del sistema.
-- **pgAdmin 4:** Administración y gestión de la base de datos.
+- **PostgreSQL:** Almacenamiento y organización de la información del sistema (tablas con restricciones de integridad, claves primarias y tipos ENUM).
+- **pgAdmin 4:** Administración, diseño DDL y gestión de la base de datos.
 
-**Infraestructura**
-- **BlueHosting / cPanel:** Alojamiento de los componentes de la solución.
+**Herramientas de desarrollo**
+- **npm (v11.x):** Administración de dependencias.
+- **npx:** Ejecución de paquetes del entorno Node.js.
+
+**Infraestructura y hosting**
+- **BlueHosting / cPanel:** Alojamiento de los componentes de la solución y dominio corporativo.
 
 **Control de versiones**
-- **Git / GitHub:** Administración y seguimiento del código fuente.
+- **Git / GitHub:** Control de versiones, trabajo en ramas tipo `feature/fix` y reglas de protección en rama `main` (Pull Requests).
 
 **Gestión del proyecto**
-- **Trello:** Organización y seguimiento de actividades.
+- **Trello (Metodología Kanban):** Organización y seguimiento continuo de sprints y tareas.
 
 **Modelamiento de procesos**
 - **Bizagi Modeler / BPMN:** Representación y análisis de los procesos organizacionales.
 
-*Las versiones específicas de las demás tecnologías se incorporarán durante la implementación.*
+---
 
 ## 3. Ejecución local
 
-Actualmente, la base de datos PostgreSQL se encuentra implementada en el hosting de BlueHosting. El desarrollo del backend y frontend se realizará utilizando Node.js, Express y React, respectivamente.
+Sigue estos pasos para clonar y ejecutar el proyecto en tu máquina local:
 
-Una vez completada la implementación, los pasos para ejecutar el proyecto localmente serán los siguientes:
+### Requisitos previos
+- Node.js (v20+ recomendado) y npm instalados.
+- Instancia de PostgreSQL en ejecución o acceso a la base de datos remota.
 
-1. Instalar Node.js, npm y las herramientas necesarias para trabajar con PostgreSQL.
-2. Clonar el repositorio desde GitHub.
-3. Instalar las dependencias del backend y frontend.
-4. Configurar las variables de entorno mediante el archivo `.env.example`.
-5. Configurar los parámetros de conexión con la base de datos PostgreSQL alojada en BlueHosting.
-6. Ejecutar el servidor backend.
-7. Ejecutar la aplicación frontend.
-8. Acceder a la aplicación desde la dirección local configurada.
+### Paso 1: Clonar el repositorio
 
-## 4. Integrantes y roles
+```bash
+git clone https://github.com/Sebastianignaciobarriosvaras/capstone-2026--002D--Sebasti-n_Barrios-Gabriel_Tello-.git
+cd capstone-2026--002D--Sebasti-n_Barrios-Gabriel_Tello-
+```
+
+### Paso 2: Configurar e instalar el Backend
+
+```bash
+cd Backend
+npm install
+```
+
+Crea un archivo `.env` en la carpeta `Backend` con las siguientes credenciales de conexión:
+
+```env
+PORT=3000
+DB_USER=tu_usuario
+DB_HOST=localhost
+DB_NAME=zoron_db
+DB_PASSWORD=tu_contrasena
+DB_PORT=5432
+```
+
+### Paso 3: Configurar e instalar el Frontend
+
+```bash
+cd ../Frontend
+npm install
+```
+
+### Paso 4: Encender los servidores
+
+*Nota para Windows PowerShell:* Si se presentan restricciones al ejecutar scripts (`npm run dev`), otorga permisos temporales en la consola ejecutando:
+
+```powershell
+Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope Process
+```
+
+- **Terminal 1 (Backend):**
+
+  ```bash
+  cd Backend
+  npm run dev
+  ```
+
+  *(Confirma el mensaje: "Servidor corriendo en puerto 3000 y conexión exitosa a PostgreSQL").*
+
+- **Terminal 2 (Frontend):**
+
+  ```bash
+  cd Frontend
+  npm run dev
+  ```
+
+  *(Accede a la aplicación en `http://localhost:5173` o la URL mostrada por Vite).*
+
+## 4. Desafíos Técnicos y Resoluciones (Hitos de Desarrollo)
+
+Durante el ciclo de desarrollo se diagnosticaron y solucionaron diversos desafíos críticos de software:
+
+1. **Módulo ETL y Carga Masiva de Excel (Pesos Chilenos - CLP):**
+   - *Problema:* El formateador por defecto interpretaba los puntos de miles chilenos (`$67.334`) como decimales internacionales, guardando los montos como `$67.00` en PostgreSQL.
+   - *Solución:* Se creó el algoritmo sanitizador `limpiarNumero`, el cual distingue puntos de miles versus comas decimales y fuerza redondeos enteros (`Math.round`) en CLP.
+
+2. **Parseo y Normalización de Fechas Históricas:**
+   - *Problema:* Excel exporta fechas como números de serie (`45565`) o cadenas locales (`DD-MM-YYYY`), provocando que JavaScript devolviera `NaN` e insertara la fecha del día por defecto.
+   - *Solución:* Se desarrolló `formatearFechaChile`, utilizando `XLSX.SSF.parse_date_code()` y expresiones regulares para convertir cualquier formato entrante a fechas ISO (`YYYY-MM-DD`).
+
+3. **Integridad Atómica y Transacciones en Backend:**
+   - *Problema:* La inserción de planillas de más de 700 filas mediante llamadas HTTP individuales saturaba la red y dejaba registros a medias si ocurría un error.
+   - *Solución:* Se creó la ruta `/movimientos/carga-masiva` respaldada por transacciones atómicas (`BEGIN` / `COMMIT` / `ROLLBACK`) en `movimientoModel.js`.
+
+## 5. Integrantes y roles
 
 **Sebastián Ignacio Barrios Varas**
+
 - Análisis y levantamiento de requerimientos.
 - Modelamiento de procesos BPMN.
-- Documentación del proyecto.
-- Diseño e implementación de la Base de Datos Postgre SQL.
-- Desarrollo del frontend mediante React.
+- Diseño e implementación de la Base de Datos PostgreSQL.
+- Desarrollo del frontend en React (Layout, Modales, Filtros, Carga Masiva).
 - Gestión y seguimiento del proyecto.
 
 **Gabriel Francisco Tello Fernández**
-- Análisis y estructuración de información.
-- Desarrollo del Backend mediante Node.js / Express.
-- Implementación de la lógica de negocio y los servicios de comunicación con la Base de Datos. 
-- Apoyo en el diseño de la solución tecnológica y gestión de datos.
 
-Ambos integrantes participan colaborativamente en el análisis, diseño, desarrollo, pruebas y documentación de la solución.
+- Análisis y estructuración de la información.
+- Desarrollo del Backend en Node.js / Express.
+- Implementación de la lógica de negocio, endpoints masivos y conexión a BD.
+- Pruebas, soporte técnico y documentación.
 
-## 5. Metodología de trabajo
+Ambos integrantes participan colaborativamente en el análisis, desarrollo, pruebas e integración.
 
-Para el desarrollo del proyecto se utiliza una metodología de trabajo basada en Kanban, apoyada por la herramienta Trello, que permite organizar las actividades, asignar responsabilidades y realizar seguimiento continuo de los avances.
+## 6. Metodología de trabajo
 
-Se optó por este enfoque debido a que permite visualizar el estado de cada tarea, priorizar actividades y adaptarse a los requerimientos que puedan surgir durante el desarrollo del proyecto.
-
-Las actividades se organizan en las siguientes etapas:
+Se utiliza una metodología ágil basada en **Kanban** mediante **Trello**. Las etapas del proyecto abarcan:
 
 - Levantamiento y análisis de requerimientos.
 - Diagnóstico y modelamiento de procesos.
-- Propuesta de solución tecnológica.
-- Diseño de la solución tecnológica.
+- Propuesta y diseño de la solución tecnológica.
 - Desarrollo e integración de componentes.
-- Pruebas y validación.
-- Documentación y entrega.
+- Pruebas, validación y optimización de datos.
+- Documentación técnica y entrega.
 
-El seguimiento de las actividades, tareas pendientes y avances se encuentra registrado en el tablero de Trello del proyecto.
+## 7. Arquitectura del sistema
 
-## 6. Arquitectura del sistema
+La arquitectura comprende tres capas conectadas mediante servicios REST:
 
-La plataforma contempla una arquitectura organizada en tres componentes principales: frontend, backend y base de datos, alojados mediante los servicios de BlueHosting. La aplicación interna estará disponible a través del dominio `https://teamzoron.cl/`, mientras que el sitio corporativo `https://zoron.cl/` mantendrá un enlace directo hacia ella.
+```text
+[ Cliente / Navegador ] <---> [ Frontend (React / Vite) ]
+                                    |
+                               (HTTP / API REST)
+                                    v
+[ PostgreSQL (BlueHosting) ] <---> [ Backend (Node.js / Express) ]
+```
 
-### Componentes de la arquitectura
+### Componentes de la arquitectura:
 
-- **Frontend (React):** Interfaz de usuario mediante la cual los colaboradores podrán iniciar sesión, registrar información y consultar dashboards e indicadores.
-- **Backend (Node.js / Express):** Responsable de procesar las solicitudes del frontend, gestionar la lógica de negocio y establecer la comunicación con PostgreSQL.
-- **Base de datos (PostgreSQL):** Encargada del almacenamiento y organización de la información necesaria para el funcionamiento de la plataforma.
-- **Infraestructura (BlueHosting):** Proporcionará el entorno de alojamiento para los componentes correspondientes y la disponibilidad de la plataforma mediante el dominio definido.
+- **Frontend (React):** Interfaz cliente SPA responsiva con componentes modulares.
+- **Backend (Node.js / Express):** Capa de controladores, modelos y rutas RESTful.
+- **Base de Datos (PostgreSQL):** Almacenamiento persistente con tablas normalizadas (`registro_movimientos`) y validación de tipos ENUM.
+- **Infraestructura (BlueHosting):** Alojamiento y disponibilidad a través del dominio corporativo.
 
-### Flujo de comunicación
-
-1. El colaborador accede al sitio corporativo `zoron.cl` y selecciona el enlace disponible en su menú de navegación (navbar) para ingresar a la plataforma interna.
-2. El navegador carga la interfaz desarrollada en React desde `teamzoron.cl`.
-3. El frontend realiza solicitudes al backend mediante una API.
-4. El backend procesa las solicitudes y consulta o modifica la información almacenada en PostgreSQL.
-5. Los resultados son enviados al frontend para su presentación al usuario.
-
-### Diagrama de arquitectura
-
-El diagrama de arquitectura se incorporará en esta sección una vez definida la distribución definitiva de los componentes y su implementación en el hosting.
-
-## 7. Acceso a la plataforma
-
-El sitio corporativo de ZORON E.I.R.L. se encuentra disponible en:
-
-- **Sitio corporativo:** [https://zoron.cl](https://zoron.cl)
-
-La plataforma interna será alojada en el dominio `https://teamzoron.cl/`, donde los colaboradores podrán acceder al sistema mediante sus credenciales de usuario.
-
-Además, se incorporará un hipervínculo directo en el menú de navegación (navbar) del sitio corporativo `zoron.cl`, permitiendo acceder a la plataforma interna de manera sencilla y centralizada.
+## 8. Acceso a la plataforma
 
 - **Sitio corporativo:** [https://zoron.cl](https://zoron.cl)
 - **Plataforma interna:** [https://teamzoron.cl/](https://teamzoron.cl/)
 
-## 8. Estado actual del proyecto
-
-El estado de avance de los principales componentes del proyecto se detalla a continuación:
+## 9. Estado actual del proyecto
 
 **Etapas completadas**
-- Levantamiento de requerimientos.
-- Análisis y modelamiento de procesos.
-- Diseño de la solución.
 
-**Componentes implementados**
-- Base de datos PostgreSQL en BlueHosting.
+- Levantamiento y análisis de requerimientos.
+- Modelamiento de procesos en Bizagi BPMN.
+- Estructuración e implementación DDL de PostgreSQL en BlueHosting.
+- Desarrollo del Backend (API REST, Endpoints CRUD y Carga Masiva con Transacciones).
+- Desarrollo del Frontend (Layout responsivo, Sidebar, Modales CRUD, Filtros de Proyectos, Módulo ETL de Carga Masiva Excel).
+- Normalización e integración exitosa de datos masivos (Limpieza CLP y Fechas).
 
-**Componentes pendientes**
-- Backend Node.js / Express.
-- Frontend React.
-- Integración con PostgreSQL.
-- Dashboards e indicadores.
-- Configuración y despliegue del dominio de acceso.
-- Integración y pruebas.
+**En desarrollo / Próximos pasos**
 
-**En desarrollo**
-- Documentación técnica.
+- Personalización de la línea gráfica corporativa del Frontend (Colores de la empresa, logotipo y estética final).
+- Dashboard con gráficos de indicadores contables.
+- Despliegue final en producción.
 
----
+**Proyecto Capstone – Ingeniería en Informática**
 
-**Proyecto Capstone – Ingeniería en Informática**  
-**Duoc UC – Sede Valparaíso**  
+**Duoc UC – Sede Valparaíso**
+
 **Empresa:** ZORON E.I.R.L.
