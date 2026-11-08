@@ -10,6 +10,7 @@ const movimientoRoutes = require('./routes/movimientoRoutes');
 const usuarioRoutes = require('./routes/usuarioRoutes');
 const proyeccionRoutes = require('./routes/proyeccionRoutes');
 const cargaRoutes = require('./routes/cargaRoutes');
+const authRoutes = require('./routes/authRoutes'); 
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -20,12 +21,12 @@ app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
 // 3. Usar rutas
-//app.use('/api/proyectos', proyectoRoutes);
+app.use('/api/auth', authRoutes); 
 app.use('/api/movimientos', movimientoRoutes);
 app.use('/api/usuarios', usuarioRoutes);
 app.use('/api/proyecciones', proyeccionRoutes);
 app.use('/api/cargas', cargaRoutes);
-app.use('/api/proyectos', require('./routes/proyectoRoutes'));
+app.use('/api/proyectos', proyectoRoutes);
 
 // 4. Ruta principal
 /**
