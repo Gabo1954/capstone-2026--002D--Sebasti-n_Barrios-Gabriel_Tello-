@@ -47,9 +47,9 @@ export default function Layout({ children, usuario, cerrarSesion }) {
             marginBottom: '20px' 
           }}>
             <img 
-              src="/logo-zoron.png" 
+              src="/logo zoron.png" 
               alt="Logo Zoron" 
-              style={{ height: '32px', width: 'auto', objectFit: 'contain' }}
+              style={{ height: '90px', width: 'auto', objectFit: 'contain' }}
               onError={(e) => { e.target.style.display = 'none'; }}
             />
             <div>
