@@ -1,268 +1,459 @@
-Capstone 2026 – 002D
+# ZORON -- Plataforma de Gestión Financiera
 
-Repositorio GitHub de Proyecto ATP Capstone 2026
+![Proyecto Capstone
+2026](https://img.shields.io/badge/Capstone-2026--002D-1f6feb)
+![Frontend](https://img.shields.io/badge/Frontend-React%20%2B%20Vite-61dafb)
+![Backend](https://img.shields.io/badge/Backend-Node.js%20%2B%20Express-339933)
+![Base de
+datos](https://img.shields.io/badge/Base%20de%20datos-PostgreSQL-4169e1)
 
-Integrantes: Sebastián Barrios y Gabriel Tello.
+Repositorio del proyecto **ATP Capstone 2026 -- 002D**, desarrollado en
+el marco de la carrera de Ingeniería en Informática de Duoc UC, sede
+Valparaíso.
 
-Zoron – Plataforma de Gestión Financiera
+**Integrantes:** Sebastián Ignacio Barrios Varas y Gabriel Francisco
+Tello Fernández\
+**Empresa:** ZORON E.I.R.L.\
+**Proyecto:** Plataforma de Gestión Financiera
 
-1. Descripción del proyecto
+------------------------------------------------------------------------
 
-El proyecto consiste en el diseño y desarrollo de una plataforma interna para ZORON E.I.R.L., empresa dedicada a la consultoría en sostenibilidad y cambio climático. Su propósito es mejorar la gestión y organización de la información empresarial mediante herramientas tecnológicas que permitan sistematizar procesos internos, facilitar el registro y consulta de información y disponer de dashboards interactivos y simuladores para apoyar la toma de decisiones.
+## 1. Descripción general
 
-La solución está dirigida a los colaboradores y administración de la empresa, incorporando funcionalidades de acceso restringido, módulo de registro de movimientos financieros, vista de proyectos con drill-down, carga masiva de planillas Excel, visualización de indicadores contables en tiempo real y un módulo de simulación de proyecciones en memoria.
+**ZORON** es una plataforma interna desarrollada para **ZORON
+E.I.R.L.**, empresa dedicada a la consultoría en sostenibilidad y cambio
+climático. Su objetivo es fortalecer la gestión y organización de la
+información empresarial mediante herramientas que permitan sistematizar
+procesos internos, centralizar registros y facilitar el análisis de
+información para la toma de decisiones.
 
-2. Tecnologías utilizadas
+La solución está orientada a los colaboradores y al equipo
+administrativo de la empresa. Integra funcionalidades de acceso
+restringido, gestión de movimientos financieros, consulta de proyectos
+mediante navegación de detalle (*drill-down*), carga masiva de planillas
+Excel, dashboards de indicadores contables y simulación de proyecciones
+financieras en memoria.
 
-Las tecnologías seleccionadas e implementadas para el desarrollo de la plataforma se organizan de la siguiente manera:
+### Funcionalidades principales
 
-Frontend
+-   Acceso restringido a la plataforma.
+-   Registro, consulta, edición y eliminación de movimientos
+    financieros.
+-   Visualización de proyectos y navegación hacia su información
+    detallada.
+-   Carga masiva de movimientos desde archivos Excel.
+-   Procesamiento y normalización de montos en pesos chilenos (CLP) y
+    fechas.
+-   Dashboards interactivos con indicadores contables y financieros.
+-   Simulación de proyecciones financieras sin modificar los registros
+    persistidos en la base de datos.
+-   Documentación interactiva de los servicios del backend mediante
+    Swagger UI.
 
-React (Vite): Desarrollo de la interfaz de usuario, gestión del estado reactivo y dashboards interactivos.
+## 2. Tecnologías y herramientas
 
-React Router DOM: Enrutamiento cliente-side para la navegación entre páginas (Movimientos, Proyectos, Proyecciones, Carga Masiva, Dashboard).
+### Frontend
 
-Chart.js y react-chartjs-2: Renderizado de gráficos interactivos (Gráficos de Torta/Doughnut, Barras horizontales y agrupadas, Líneas de Burn Rate y Curvas de Proyección acumulada).
+  -----------------------------------------------------------------------
+  Tecnología                          Uso
+  ----------------------------------- -----------------------------------
+  React                               Construcción de la interfaz
+                                      mediante componentes reutilizables
+                                      y gestión del estado de la
+                                      aplicación.
 
-SheetJS (xlsx): Procesamiento cliente-side de archivos binarios .xlsx y parseo masivo de celdas mediante FileReader.
+  Vite                                Herramienta de desarrollo y
+                                      compilación del frontend.
 
-Axios: Cliente HTTP para la integración con la API RESTful del backend.
+  React Router DOM                    Navegación entre los módulos de la
+                                      plataforma.
 
-Backend
+  Chart.js y react-chartjs-2          Visualización de gráficos de
+                                      indicadores financieros.
 
-Node.js (v24.x): Entorno de ejecución asíncrono para el servidor.
+  SheetJS (xlsx)                      Lectura y procesamiento de archivos
+                                      Excel desde el navegador.
 
-Express: Framework web para la arquitectura de la API REST, enrutamiento, controladores y middlewares con soporte de payloads de hasta 50 MB.
+  Axios                               Comunicación HTTP con la API REST
+                                      del backend.
+  -----------------------------------------------------------------------
 
-pg (node-postgres): Conector nativo a PostgreSQL con soporte para pool de conexiones y transacciones atómicas (BEGIN / COMMIT / ROLLBACK).
+### Backend
 
-CORS y Dotenv: Gestión de seguridad entre dominios y variables de entorno.
+  -----------------------------------------------------------------------
+  Tecnología                          Uso
+  ----------------------------------- -----------------------------------
+  Node.js                             Entorno de ejecución de JavaScript
+                                      del lado del servidor.
 
-Swagger UI (swagger-ui-express): Documentación interactiva de la API REST en /api-docs.
+  Express                             Framework para implementar rutas,
+                                      controladores y middlewares de la
+                                      API REST.
 
-Base de datos
+  pg (node-postgres)                  Conexión y administración de
+                                      consultas y transacciones con
+                                      PostgreSQL.
 
-PostgreSQL: Almacenamiento y organización de la información del sistema (tablas con restricciones de integridad, claves primarias y tipos ENUM).
+  CORS                                Configuración del acceso entre
+                                      distintos orígenes.
 
-pgAdmin 4: Administración, diseño DDL y gestión de la base de datos.
+  dotenv                              Lectura de variables de entorno y
+                                      configuración sensible.
 
-Herramientas de desarrollo
+  Swagger UI Express                  Publicación de la documentación
+                                      interactiva de la API en
+                                      `/api-docs`.
+  -----------------------------------------------------------------------
 
-npm (v11.x): Administración de dependencias.
+### Base de datos e infraestructura
 
-npx: Ejecución de paquetes del entorno Node.js.
+  -----------------------------------------------------------------------
+  Tecnología / herramienta            Uso
+  ----------------------------------- -----------------------------------
+  PostgreSQL                          Almacenamiento persistente de la
+                                      información, con claves,
+                                      restricciones de integridad y tipos
+                                      de datos definidos.
 
-Infraestructura y hosting
+  pgAdmin 4                           Administración y gestión de la base
+                                      de datos.
 
-BlueHosting / cPanel: Alojamiento de los componentes de la solución y dominio corporativo.
+  BlueHosting / cPanel                Infraestructura de alojamiento de
+                                      la solución.
+  -----------------------------------------------------------------------
 
-Control de versiones
+### Desarrollo y gestión
 
-Git / GitHub: Control de versiones, trabajo en ramas tipo feature/fix y reglas de protección en rama main (Pull Requests).
+-   **npm / npx:** administración y ejecución de dependencias y
+    paquetes.
+-   **Git / GitHub:** control de versiones, trabajo con ramas y revisión
+    de cambios mediante Pull Requests.
+-   **Trello:** organización y seguimiento de tareas mediante
+    metodología Kanban.
+-   **Bizagi Modeler / BPMN:** modelamiento y representación de procesos
+    organizacionales.
 
-Gestión del proyecto
+## 3. Arquitectura del sistema
 
-Trello (Metodología Kanban): Organización y seguimiento continuo de sprints y tareas.
+La solución utiliza una arquitectura de tres capas. El frontend consume
+los servicios REST expuestos por el backend, mientras que este último
+administra la comunicación con PostgreSQL.
 
-Modelamiento de procesos
+``` text
+┌──────────────────────────────┐
+│      Cliente / Navegador     │
+└──────────────┬───────────────┘
+               │
+               ▼
+┌──────────────────────────────┐
+│     Frontend: React + Vite   │
+│       Chart.js / Axios       │
+└──────────────┬───────────────┘
+               │ HTTP / API REST
+               ▼
+┌──────────────────────────────┐
+│    Backend: Node.js/Express  │
+│      Rutas y controladores   │
+└──────────────┬───────────────┘
+               │
+               ▼
+┌──────────────────────────────┐
+│          PostgreSQL          │
+│       Base de datos          │
+└──────────────────────────────┘
+```
 
-Bizagi Modeler / BPMN: Representación y análisis de los procesos organizacionales.
+### Capas y responsabilidades
 
-3. Ejecución local
+-   **Frontend:** aplicación web de una sola página (SPA), con interfaz
+    responsiva, componentes modulares, filtros y gráficos interactivos.
+-   **Backend:** concentra las rutas, controladores, modelos y lógica de
+    negocio. Expone los servicios mediante una API REST.
+-   **Base de datos:** almacena los registros de manera persistente y
+    aplica restricciones de integridad y validaciones definidas en el
+    modelo.
+-   **Infraestructura:** los componentes publicados utilizan los
+    servicios de alojamiento de BlueHosting, de acuerdo con la
+    configuración del entorno.
 
-Sigue estos pasos para clonar y ejecutar el proyecto en tu máquina local.
+## 4. Requisitos previos
 
-Requisitos previos
+Para ejecutar el proyecto localmente se requiere:
 
-Node.js (v20+ recomendado) y npm instalados.
+-   Node.js (versión 20 o superior).
+-   npm, incluido con Node.js.
+-   PostgreSQL en ejecución o acceso a una instancia remota.
+-   Git para clonar el repositorio.
 
-Instancia de PostgreSQL en ejecución o acceso a la base de datos remota.
+> **Importante:** las credenciales de conexión deben configurarse
+> localmente en un archivo `.env`. No se deben publicar contraseñas ni
+> datos sensibles en GitHub.
 
-Paso 1: Clonar el repositorio
+## 5. Instalación y ejecución local
 
+### Paso 1. Clonar el repositorio
+
+``` bash
 git clone https://github.com/Sebastianignaciobarriosvaras/capstone-2026--002D--Sebasti-n_Barrios-Gabriel_Tello-.git
-
 cd capstone-2026--002D--Sebasti-n_Barrios-Gabriel_Tello-
+```
 
-Paso 2: Configurar e instalar el Backend
+### Paso 2. Configurar el backend
 
+Ingresar a la carpeta del backend e instalar las dependencias:
+
+``` bash
 cd Backend
 npm install
+```
 
-Crea un archivo .env en la carpeta Backend con las siguientes credenciales de conexión:
+Crear un archivo llamado `.env` dentro de la carpeta `Backend`,
+utilizando la siguiente estructura:
 
+``` env
 PORT=3000
-DB_USER=tu_usuario
+
 DB_HOST=localhost
-DB_NAME=zoron_db
-DB_PASSWORD=tu_contrasena
 DB_PORT=5432
+DB_USER=tu_usuario
+DB_PASSWORD=tu_contraseña
+DB_NAME=zoron_bd
+```
 
-Paso 3: Configurar e instalar el Frontend
+Reemplazar los valores de ejemplo por los datos correspondientes al
+entorno de PostgreSQL que se utilizará. El archivo `.env` contiene
+configuración local y no debe subirse al repositorio.
 
+### Paso 3. Configurar el frontend
+
+Desde la raíz del proyecto, ingresar a la carpeta `Frontend` e instalar
+sus dependencias:
+
+``` bash
 cd ../Frontend
 npm install
+```
 
-Paso 4: Encender los servidores
+### Paso 4. Iniciar los servicios
 
-Nota para Windows PowerShell: Si se presentan restricciones al ejecutar scripts (npm run dev), otorga permisos temporales en la consola ejecutando:
+Se deben utilizar dos terminales independientes.
 
-Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope Process
+**Terminal 1 -- Backend**
 
-Terminal 1 (Backend):
-
+``` bash
 cd Backend
 npm run dev
+```
 
-Confirma el mensaje: "Servidor corriendo en puerto 3000 y conexión exitosa a PostgreSQL".
+El backend debe iniciar en el puerto configurado y establecer conexión
+con PostgreSQL. Si la aplicación muestra un mensaje de inicio y conexión
+exitosa, el servicio estará disponible.
 
-Terminal 2 (Frontend):
+**Terminal 2 -- Frontend**
 
+``` bash
 cd Frontend
 npm run dev
+```
 
-Accede a la aplicación en http://localhost:5173 o a la URL mostrada por Vite.
+Vite mostrará en la terminal la dirección local de la aplicación.
+Habitualmente estará disponible en:
 
-4. Desafíos técnicos y resoluciones (Hitos de desarrollo)
+``` text
+http://localhost:5173
+```
 
-Durante el ciclo de desarrollo se diagnosticaron y solucionaron diversos desafíos críticos de software:
+### Nota para Windows PowerShell
 
-Módulo ETL y carga masiva de Excel (Pesos Chilenos - CLP)
+Si PowerShell bloquea la ejecución de scripts requeridos por npm, se
+puede habilitar temporalmente la ejecución para la sesión actual:
 
-Problema: El formateador por defecto interpretaba los puntos de miles chilenos ($67.334) como decimales internacionales, guardando los montos como $67.00 en PostgreSQL.
+``` powershell
+Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope Process
+```
 
-Solución: Se creó el algoritmo sanitizador limpiarNumero, el cual distingue puntos de miles versus comas decimales y fuerza redondeos enteros (Math.round) en CLP.
+## 6. Desafíos técnicos y soluciones implementadas
 
-Parseo y normalización de fechas históricas
+Durante el desarrollo se abordaron distintos problemas relacionados con
+la calidad, consistencia e integración de los datos.
 
-Problema: Excel exporta fechas como números de serie (45565) o cadenas locales (DD-MM-YYYY), provocando que JavaScript devolviera NaN e insertara la fecha del día por defecto.
+### 6.1. Procesamiento ETL y carga masiva de Excel (CLP)
 
-Solución: Se desarrolló formatearFechaChile, utilizando XLSX.SSF.parse_date_code() y expresiones regulares para convertir cualquier formato entrante a fechas ISO (YYYY-MM-DD).
+**Problema:** los formatos numéricos utilizados en Chile, como
+`$67.334`, podían interpretarse incorrectamente como valores decimales
+al procesarse con convenciones de otras regiones.
 
-Integridad atómica y transacciones en Backend
+**Solución:** se implementó la función `limpiarNumero`, encargada de
+reconocer separadores de miles y decimales, normalizar los valores y
+redondear los montos a números enteros para su almacenamiento en pesos
+chilenos.
 
-Problema: La inserción de planillas de más de 700 filas mediante llamadas HTTP individuales saturaba la red y dejaba registros a medias si ocurría un error.
+### 6.2. Parseo y normalización de fechas
 
-Solución: Se creó la ruta /movimientos/carga-masiva, respaldada por transacciones atómicas (BEGIN / COMMIT / ROLLBACK) en movimientoModel.js.
+**Problema:** los archivos Excel pueden entregar fechas como números de
+serie (por ejemplo, `45565`) o como cadenas con formato local
+(`DD-MM-YYYY`). Una interpretación incorrecta podía producir valores
+inválidos o fechas no correspondientes al registro original.
 
-Visualización gráfica y filtrado por tipos ENUM de PostgreSQL
+**Solución:** se desarrolló la función `formatearFechaChile`, que
+utiliza `XLSX.SSF.parse_date_code()` y expresiones regulares para
+reconocer los formatos de entrada y convertirlos a formato ISO
+(`YYYY-MM-DD`).
 
-Problema: Los gráficos no agrupaban correctamente las transacciones al existir variaciones en la escritura de los tipos de flujo o condiciones contables.
+### 6.3. Integridad de la carga masiva mediante transacciones
 
-Solución: Se estandarizó la normalización de cadenas con .toUpperCase().trim() sobre los valores ENUM (INGRESO OPERACIONAL, COSTO, GASTO) y se implementó un selector dinámico por año con sincronización en tiempo real en los componentes del Dashboard y Proyecciones.
+**Problema:** procesar planillas de cientos de filas mediante
+solicitudes HTTP individuales aumentaba la carga de comunicación y podía
+dejar información parcialmente insertada ante un error.
 
-Simulación de proyecciones financieras en memoria (Sin persistencia)
+**Solución:** se implementó el endpoint `/movimientos/carga-masiva`,
+utilizando transacciones de PostgreSQL (`BEGIN`, `COMMIT` y `ROLLBACK`)
+para asegurar que la operación se confirme completa o se revierta ante
+un fallo.
 
-Problema: Permitir a los administradores proyectar la liquidez futura mediante nuevas estimaciones sin alterar ni sobreescribir la base de datos real.
+### 6.4. Normalización de categorías y visualización de indicadores
 
-Solución: Se creó el componente ProyeccionesPage.jsx, combinando los registros reales de PostgreSQL con un estado en memoria que recalcula dinámicamente el Saldo Proyectado Acumulado a lo largo de una línea de tiempo continua.
+**Problema:** las diferencias de escritura o formato en los valores
+asociados a los tipos de movimiento podían provocar agrupaciones
+incorrectas en los gráficos.
 
-5. Integrantes y roles
+**Solución:** se normalizaron las cadenas mediante
+`.toUpperCase().trim()` para estandarizar los valores, incluyendo
+categorías como `INGRESO OPERACIONAL`, `COSTO` y `GASTO`. Además, se
+incorporó un selector dinámico de año sincronizado con los módulos
+Dashboard y Proyecciones.
 
-Sebastián Ignacio Barrios Varas
+### 6.5. Simulación de proyecciones financieras en memoria
 
-Análisis y levantamiento de requerimientos.
+**Problema:** se necesitaba permitir que los administradores evaluaran
+escenarios futuros de liquidez sin alterar ni sobrescribir los
+movimientos reales almacenados.
 
-Modelamiento de procesos BPMN.
+**Solución:** se desarrolló el componente `ProyeccionesPage.jsx`, que
+combina los registros obtenidos desde PostgreSQL con estimaciones
+mantenidas en el estado de la aplicación. De esta manera, se recalcula
+el saldo proyectado acumulado a lo largo de una línea de tiempo, sin
+persistir las simulaciones en la base de datos.
 
-Diseño e implementación de la Base de Datos PostgreSQL.
+## 7. Módulos de la plataforma
 
-Desarrollo del frontend en React (Layout, Modales, Dashboard, Proyectos, Simulador de Proyecciones, Carga Masiva).
+La solución contempla los siguientes módulos:
 
-Gestión y seguimiento del proyecto.
+  -----------------------------------------------------------------------
+  Módulo                              Descripción
+  ----------------------------------- -----------------------------------
+  Movimientos                         Gestión de los registros
+                                      financieros de la organización.
 
-Gabriel Francisco Tello Fernández
+  Proyectos                           Consulta de proyectos y navegación
+                                      hacia información de mayor detalle
+                                      (*drill-down*).
 
-Análisis y estructuración de la información.
+  Dashboard                           Visualización de indicadores
+                                      contables y financieros mediante
+                                      gráficos interactivos.
 
-Desarrollo del Backend en Node.js / Express.
+  Carga Masiva                        Importación de movimientos desde
+                                      planillas Excel, con normalización
+                                      y validación de datos.
 
-Implementación de la lógica de negocio, endpoints masivos y conexión a BD.
+  Proyecciones                        Simulación de escenarios
+                                      financieros y evolución del saldo
+                                      acumulado en memoria.
+  -----------------------------------------------------------------------
 
-Pruebas, soporte técnico y documentación de la API REST.
+## 8. Integrantes y responsabilidades
 
-Trabajo colaborativo: Ambos integrantes participan colaborativamente en el análisis, desarrollo, pruebas e integración.
+### Sebastián Ignacio Barrios Varas
 
-6. Metodología de trabajo
+-   Análisis y levantamiento de requerimientos.
+-   Modelamiento de procesos mediante BPMN.
+-   Diseño e implementación de la base de datos PostgreSQL.
+-   Desarrollo frontend en React: estructura visual, modales, Dashboard,
+    Proyectos, Proyecciones y Carga Masiva.
+-   Gestión y seguimiento del proyecto.
 
-Se utiliza una metodología ágil basada en Kanban mediante Trello.
+### Gabriel Francisco Tello Fernández
 
-Las etapas del proyecto abarcan:
+-   Análisis y estructuración de la información.
+-   Desarrollo del backend utilizando Node.js y Express.
+-   Implementación de lógica de negocio y endpoints para operaciones
+    masivas.
+-   Integración y conexión con PostgreSQL.
+-   Pruebas, soporte técnico y documentación de la API REST.
 
-Levantamiento y análisis de requerimientos.
+**Trabajo colaborativo:** ambos integrantes participan en el análisis,
+desarrollo, pruebas, validación e integración de los componentes de la
+solución.
 
-Diagnóstico y modelamiento de procesos.
+## 9. Metodología de trabajo
 
-Propuesta y diseño de la solución tecnológica.
+El proyecto utiliza una metodología ágil basada en **Kanban**, apoyada
+por Trello para organizar tareas, visualizar avances y dar seguimiento
+al trabajo.
 
-Desarrollo e integración de componentes.
+Las principales etapas consideradas son:
 
-Pruebas, validación y optimización de datos.
+1.  Levantamiento y análisis de requerimientos.
+2.  Diagnóstico y modelamiento de procesos.
+3.  Propuesta y diseño de la solución tecnológica.
+4.  Desarrollo e integración de componentes.
+5.  Pruebas, validación y optimización de datos.
+6.  Documentación técnica y entrega.
 
-Documentación técnica y entrega.
+## 10. Estado del proyecto
 
-7. Arquitectura del sistema
+### Etapas completadas
 
-La arquitectura comprende tres capas conectadas mediante servicios REST:
+-   Levantamiento y análisis de requerimientos.
+-   Modelamiento de procesos mediante Bizagi y BPMN.
+-   Estructuración e implementación del modelo DDL de PostgreSQL en
+    BlueHosting.
+-   Desarrollo del backend: API REST, endpoints CRUD, carga masiva con
+    transacciones y documentación Swagger UI.
+-   Desarrollo del frontend: layout responsivo, menú lateral, modales
+    CRUD, filtros de proyectos con *drill-down* y módulo de carga masiva
+    Excel.
+-   Normalización e integración de datos masivos, incluyendo montos CLP
+    y fechas.
+-   Implementación del Dashboard con indicadores contables, gráficos de
+    egresos, principales proveedores, rentabilidad por proyecto y Burn
+    Rate semanal.
+-   Personalización de la línea gráfica corporativa del frontend.
 
-[ Cliente / Navegador ]
-          |
-          v
-[ Frontend (React / Vite + Chart.js) ]
-          |
-          | HTTP / API REST
-          v
-[ Backend (Node.js / Express) ]
-          |
-          v
-[ PostgreSQL (BlueHosting) ]
+### En desarrollo y próximos pasos
 
-Componentes de la arquitectura
+-   Corrección y validación del módulo de proyección financiera,
+    especialmente la continuidad de la curva de saldo acumulado.
+-   Ejecución de pruebas funcionales y validación integral de los
+    módulos.
+-   Despliegue final y verificación de la solución en producción.
 
-Frontend (React): Interfaz cliente SPA responsiva con componentes modulares, selector dinámico de año y gráficos de Chart.js.
+## 11. Acceso a la plataforma
 
-Backend (Node.js / Express): Capa de controladores, modelos y rutas RESTful.
+-   **Sitio corporativo:** <https://zoron.cl>
+-   **Plataforma interna:** <https://teamzoron.cl/>
 
-Base de Datos (PostgreSQL): Almacenamiento persistente con tablas normalizadas (registro_movimientos) y validación de tipos ENUM.
+El acceso a la plataforma interna puede requerir credenciales
+autorizadas.
 
-Infraestructura (BlueHosting): Alojamiento y disponibilidad a través del dominio corporativo.
+## 12. Documentación de la API
 
-8. Acceso a la plataforma
+Una vez iniciado el backend, la documentación interactiva de Swagger UI
+se encuentra disponible en:
 
-Sitio corporativo: https://zoron.cl
+``` text
+http://localhost:3000/api-docs
+```
 
-Plataforma interna: https://teamzoron.cl/
+La disponibilidad de esta ruta depende de que el backend esté
+correctamente configurado y en ejecución.
 
-9. Estado actual del proyecto
+------------------------------------------------------------------------
 
-Etapas completadas
+## Información académica
 
-Levantamiento y análisis de requerimientos.
-
-Modelamiento de procesos en Bizagi BPMN.
-
-Estructuración e implementación DDL de PostgreSQL en BlueHosting.
-
-Desarrollo del Backend (API REST, Endpoints CRUD, Carga Masiva con Transacciones y Swagger UI).
-
-Desarrollo del Frontend (Layout responsivo, Sidebar, Modales CRUD, Filtros de Proyectos con Drill-Down, Módulo ETL de Carga Masiva Excel).
-
-Normalización e integración exitosa de datos masivos (Limpieza CLP y Fechas).
-
-Implementación de Dashboard con Gráficos de Indicadores Contables (Doughnut de Egresos, Top Proveedores, Rentabilidad por Proyecto y Burn Rate Semanal).
-
-Personalización de la línea gráfica corporativa final del Frontend.
-
-En desarrollo / Próximos pasos
-
-Corrección de Módulo de Proyección Financiera (Simulador en Memoria) con curva continua de saldo acumulado.
-
-Testing
-
-Despliegue final en producción.
-
-Proyecto Capstone – Ingeniería en Informática
-
-Duoc UC – Sede Valparaíso
-
-Empresa: ZORON E.I.R.L.
+**Proyecto:** Capstone -- Ingeniería en Informática\
+**Código:** ATP Capstone 2026 -- 002D\
+**Institución:** Duoc UC -- Sede Valparaíso\
+**Empresa:** ZORON E.I.R.L.
