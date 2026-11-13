@@ -5,18 +5,20 @@ export default function Layout({ children, usuario, cerrarSesion }) {
   const location = useLocation();
 
   // Menú dinámico:
-  // - Dashboard, Movimientos, Flujo de Caja y Proyectos visibles para todos
+  // - Home, Dashboard, Movimientos, Flujo de Caja, Proyectos y Excel visibles para todos
   // - Carga Masiva y Proyecciones visibles SOLO para el rol Administrador
   const esAdmin = usuario?.rol?.toLowerCase() === 'administrador';
 
   const menuItems = [
-    { path: '/', label: 'Dashboard' },
-    { path: '/movimientos', label: 'Movimientos' },
-    { path: '/flujo-caja', label: 'Flujo de Caja' },
-    { path: '/proyectos', label: 'Proyectos' },
+    { path: '/', label: '🏠 Inicio (Home)' },
+    { path: '/dashboard', label: '📊 Dashboard' },
+    { path: '/movimientos', label: '📝 Movimientos' },
+    { path: '/flujo-caja', label: '💰 Flujo de Caja' },
+    { path: '/proyectos', label: '📁 Proyectos' },
+    { path: '/excel', label: '📈 Excel Tiempo Real' },
     ...(esAdmin ? [
-      { path: '/carga-masiva', label: 'Carga Masiva' },
-      { path: '/proyecciones', label: 'Proyecciones' }
+      { path: '/carga-masiva', label: '📥 Carga Masiva' },
+      { path: '/proyecciones', label: '🔮 Proyecciones' }
     ] : []),
   ];
 
@@ -31,7 +33,7 @@ export default function Layout({ children, usuario, cerrarSesion }) {
         color: 'white', 
         display: 'flex', 
         flexDirection: 'column', 
-        justifySpaceBetween: 'space-between', 
+        justifyContent: 'space-between', 
         padding: '20px 14px',
         boxSizing: 'border-box',
         borderRight: '1px solid #1E293B'

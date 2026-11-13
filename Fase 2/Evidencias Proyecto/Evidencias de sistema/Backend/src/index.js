@@ -11,6 +11,7 @@ const usuarioRoutes = require('./routes/usuarioRoutes');
 const proyeccionRoutes = require('./routes/proyeccionRoutes');
 const cargaRoutes = require('./routes/cargaRoutes');
 const authRoutes = require('./routes/authRoutes'); 
+const excelRoutes = require('./routes/excelRoutes'); // Nueva ruta de Google Sheets importada
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -27,6 +28,7 @@ app.use('/api/usuarios', usuarioRoutes);
 app.use('/api/proyecciones', proyeccionRoutes);
 app.use('/api/cargas', cargaRoutes);
 app.use('/api/proyectos', proyectoRoutes);
+app.use('/api/excel', excelRoutes); // Nuevo endpoint de Google Sheets agregado
 
 // 4. Ruta principal
 /**
@@ -55,5 +57,6 @@ app.get('/', async (req, res) => {
 // 5. Iniciar servidor
 app.listen(PORT, () => {
   console.log(`Servidor ejecutándose en http://localhost:${PORT}`);
+  console.log(`Ruta de Google Sheets disponible en: http://localhost:${PORT}/api/excel/datos`); 
   swaggerDocs(app); 
 });
