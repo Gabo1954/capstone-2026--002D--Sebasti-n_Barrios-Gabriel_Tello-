@@ -14,35 +14,16 @@ export default function MovimientosPage() {
   const [movimientos, setMovimientos] = useState([]);
   const [cargando, setCargando] = useState(true);
 
-  const [mostrarModalCrear, setMostrarModalCrear] = useState(false);
   const [movimientoEditar, setMovimientoEditar] = useState(null);
-
-  const [formCrear, setFormCrear] = useState({
-    fecha: new Date().toISOString().split('T')[0],
-    documento: 'FACTURA',
-    nro_documento: '',
-    razon_social: '',
-    proyecto: 'GENERAL',
-    neto_liquido: 0,
-    iva: 0,
-    imposiciones_retenciones: 0,
-    total: 0,
-    condicion: 'GASTO',
-    tipo_flujo: 'VARIABLE',
-    banco: 'BCI',
-    tipo_pago: 'Debito',
-    estado_conciliacion: 'PENDIENTE',
-    descripcion: '',
-    documento_1: '',
-    documento_2: '',
-    documento_3: '',
-    documento_4: ''
-  });
 
   const [busqueda, setBusqueda] = useState('');
   const [filtroEstado, setFiltroEstado] = useState('TODOS');
   const [filtroBanco, setFiltroBanco] = useState('TODOS');
   const [filtroCondicion, setFiltroCondicion] = useState('TODOS');
+  
+  // Nuevos estados para el filtro de fechas[cite: 1]
+  const [fechaInicio, setFechaInicio] = useState('');
+  const [fechaFin, setFechaFin] = useState('');
   
   const [paginaActual, setPaginaActual] = useState(1);
   const registrosPorPagina = 10;
@@ -75,9 +56,29 @@ export default function MovimientosPage() {
       const coincideBanco = filtroBanco === 'TODOS' || m.banco === filtroBanco;
       const coincideCondicion = filtroCondicion === 'TODOS' || m.condicion === filtroCondicion;
 
-      return coincideBusqueda && coincideEstado && coincideBanco && coincideCondicion;
+      // Lógica para el filtro de fechas[cite: 1]
+      let coincideFecha = true;
+      if (fechaInicio || fechaFin) {
+        const fechaMov = m.fecha ? new Date(m.fecha.split('T')[0]) : null;
+        if (fechaMov) {
+          const inicio = fechaInicio ? new Date(fechaInicio) : null;
+          const fin = fechaFin ? new Date(fechaFin) : null;
+          
+          if (inicio && fin) {
+            coincideFecha = fechaMov >= inicio && fechaMov <= fin;
+          } else if (inicio) {
+            coincideFecha = fechaMov >= inicio;
+          } else if (fin) {
+            coincideFecha = fechaMov <= fin;
+          }
+        } else {
+           coincideFecha = false; 
+        }
+      }
+
+      return coincideBusqueda && coincideEstado && coincideBanco && coincideCondicion && coincideFecha;
     });
-  }, [movimientos, busqueda, filtroEstado, filtroBanco, filtroCondicion]);
+  }, [movimientos, busqueda, filtroEstado, filtroBanco, filtroCondicion, fechaInicio, fechaFin]);
 
   const totalPaginas = Math.ceil(movimientosFiltrados.length / registrosPorPagina) || 1;
   const movimientosPaginados = useMemo(() => {
@@ -87,20 +88,7 @@ export default function MovimientosPage() {
 
   useEffect(() => {
     setPaginaActual(1);
-  }, [busqueda, filtroEstado, filtroBanco, filtroCondicion]);
-
-  const handleCrearSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      await api.post('/movimientos', formCrear);
-      alert('¡Movimiento registrado con éxito!');
-      setMostrarModalCrear(false);
-      cargarMovimientos();
-    } catch (error) {
-      console.error('Error al registrar:', error.response?.data || error);
-      alert('Error al guardar movimiento');
-    }
-  };
+  }, [busqueda, filtroEstado, filtroBanco, filtroCondicion, fechaInicio, fechaFin]);
 
   const handleAbrirEditar = (mov) => {
     setMovimientoEditar({
@@ -133,18 +121,6 @@ export default function MovimientosPage() {
     }
   };
 
-  const handleChangeCrear = (e) => {
-    const { name, value } = e.target;
-    let updated = { ...formCrear, [name]: value };
-    if (name === 'neto_liquido' || name === 'iva' || name === 'imposiciones_retenciones') {
-      const neto = name === 'neto_liquido' ? Number(value) : Number(formCrear.neto_liquido);
-      const iva = name === 'iva' ? Number(value) : Number(formCrear.iva);
-      const ret = name === 'imposiciones_retenciones' ? Number(value) : Number(formCrear.imposiciones_retenciones);
-      updated.total = neto + iva + ret;
-    }
-    setFormCrear(updated);
-  };
-
   const handleChangeEditar = (e) => {
     const { name, value } = e.target;
     let updated = { ...movimientoEditar, [name]: value };
@@ -171,15 +147,12 @@ export default function MovimientosPage() {
   return (
     <div style={{ width: '100%', boxSizing: 'border-box' }}>
       
-      {/* CABECERA CON BOTÓN SIEMPRE VISIBLE */}
+      {/* CABECERA */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px', gap: '10px' }}>
         <div>
           <h2 style={{ margin: 0, color: '#1E293B', fontSize: '18px' }}>API ZORON - Registro de Movimientos</h2>
           <span style={{ fontSize: '12px', color: '#64748B' }}>Mostrando {movimientosFiltrados.length} registros</span>
         </div>
-        <button onClick={() => setMostrarModalCrear(true)} style={btnPrimaryStyle}>
-          + Agregar Movimiento (POST)
-        </button>
       </div>
 
       {/* PANEL DE FILTROS EN CSS GRID (COMPACTO Y AJUSTABLE AL 100% DEL ANCHO) */}
@@ -229,11 +202,39 @@ export default function MovimientosPage() {
             {ENUMS.condiciones.map((c) => <option key={c} value={c}>{c}</option>)}
           </select>
         </div>
+        
+        {/* Filtros de Fecha[cite: 1] */}
+        <div>
+           <label style={labelFilterStyle}>Fecha Desde:</label>
+           <input 
+             type="date" 
+             value={fechaInicio} 
+             onChange={(e) => setFechaInicio(e.target.value)} 
+             style={inputStyle}
+           />
+        </div>
+        
+        <div>
+           <label style={labelFilterStyle}>Fecha Hasta:</label>
+           <input 
+             type="date" 
+             value={fechaFin} 
+             onChange={(e) => setFechaFin(e.target.value)} 
+             style={inputStyle}
+           />
+        </div>
 
-        {(busqueda || filtroEstado !== 'TODOS' || filtroBanco !== 'TODOS' || filtroCondicion !== 'TODOS') && (
+        {(busqueda || filtroEstado !== 'TODOS' || filtroBanco !== 'TODOS' || filtroCondicion !== 'TODOS' || fechaInicio || fechaFin) && (
           <div style={{ display: 'flex', alignItems: 'flex-end' }}>
             <button
-              onClick={() => { setBusqueda(''); setFiltroEstado('TODOS'); setFiltroBanco('TODOS'); setFiltroCondicion('TODOS'); }}
+              onClick={() => { 
+                setBusqueda(''); 
+                setFiltroEstado('TODOS'); 
+                setFiltroBanco('TODOS'); 
+                setFiltroCondicion('TODOS');
+                setFechaInicio('');
+                setFechaFin('');
+              }}
               style={{ ...btnSecondaryStyle, padding: '5px 8px', fontSize: '11px', width: '100%' }}
             >
                Limpiar
@@ -244,7 +245,7 @@ export default function MovimientosPage() {
 
       {/* TABLA PRINCIPAL CON DESPLAZAMIENTO HORIZONTAL AISLADO */}
       {cargando ? (
-        <p>Cargando datos desde PostgreSQL...</p>
+        <p>Cargando datos desde Google Sheets (Sincronizado)...</p>
       ) : (
         <>
           <div style={{ overflowX: 'auto', backgroundColor: '#FFFFFF', borderRadius: '8px', boxShadow: '0 1px 3px rgba(0,0,0,0.1)', width: '100%' }}>
@@ -356,17 +357,7 @@ export default function MovimientosPage() {
         </>
       )}
 
-      {/* MODALES */}
-      {mostrarModalCrear && (
-        <ModalForm
-          titulo="Nuevo Movimiento (POST)"
-          formData={formCrear}
-          onChange={handleChangeCrear}
-          onSubmit={handleCrearSubmit}
-          onClose={() => setMostrarModalCrear(false)}
-        />
-      )}
-
+      {/* MODAL */}
       {movimientoEditar && (
         <ModalForm
           titulo={`Editar Movimiento ID: ${movimientoEditar.id_movimiento} (PUT)`}
