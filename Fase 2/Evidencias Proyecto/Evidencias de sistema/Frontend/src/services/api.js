@@ -1,12 +1,17 @@
 import axios from 'axios';
 
-// Conexión centralizada hacia el Backend en localhost:3000
+// En producción (npm run build) apunta directo a teamzoron.cl/v1/api; en local (npm run dev) usa localhost:3000
+const API_URL = import.meta.env.PROD
+  ? 'https://teamzoron.cl/v1/api'
+  : (import.meta.env.VITE_API_URL || 'http://localhost:3000/api');
+
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:3000/api',
+  baseURL: API_URL,
   headers: {
     'Content-Type': 'application/json'
   }
 });
+
 // 1. Limpiador de montos en Pesos Chilenos (ej: "$ 1.250.000" -> 1250000)
 const limpiarMontoCLP = (valor) => {
   if (valor === undefined || valor === null || valor === '') return 0;

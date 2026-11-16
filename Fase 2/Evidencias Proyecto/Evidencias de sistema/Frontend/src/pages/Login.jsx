@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import api from '../services/api';
 
 // Importar el logo guardado en src/assets
 import logoZoron from '../assets/logo zoron.png';
@@ -10,6 +10,7 @@ export default function Login({ setUsuario }) {
   const [password, setPassword] = useState('');
   const [aceptaTerminos, setAceptaTerminos] = useState(false);
   const [error, setError] = useState('');
+  const [cargando, setCargando] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -21,18 +22,24 @@ export default function Login({ setUsuario }) {
       return;
     }
 
+    setCargando(true);
     try {
       const res = await api.post('/auth/login', { email, password });
-      
 
       const usuarioData = res.data.usuario || res.data;
 
+      if (res.data.token) {
+        localStorage.setItem('tokenZoron', res.data.token);
+      }
       localStorage.setItem('usuarioZoron', JSON.stringify(usuarioData));
+
       setUsuario(usuarioData);
       navigate('/');
     } catch (err) {
       console.error('Error en Login:', err);
-      setError(err.response?.data?.mensaje || 'Error al iniciar sesión');
+      setError(err.response?.data?.mensaje || err.response?.data?.error || 'Error al iniciar sesión');
+    } finally {
+      setCargando(false);
     }
   };
 
@@ -144,18 +151,19 @@ export default function Login({ setUsuario }) {
 
           <button 
             type="submit" 
+            disabled={cargando}
             style={{
               marginTop: '8px',
               padding: '12px',
-              backgroundColor: '#FFCC00',
+              backgroundColor: cargando ? '#A1A1AA' : '#FFCC00',
               color: '#0D0D0D',
               border: 'none',
               borderRadius: '6px',
               fontWeight: 'bold',
-              cursor: 'pointer'
+              cursor: cargando ? 'not-allowed' : 'pointer'
             }}
           >
-            Iniciar Sesión
+            {cargando ? 'Ingresando...' : 'Iniciar Sesión'}
           </button>
         </form>
       </div>
