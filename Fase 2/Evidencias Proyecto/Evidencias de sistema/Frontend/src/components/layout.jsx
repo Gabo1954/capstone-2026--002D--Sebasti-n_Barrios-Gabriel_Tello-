@@ -10,15 +10,15 @@ export default function Layout({ children, usuario, cerrarSesion }) {
   const esAdmin = usuario?.rol?.toLowerCase() === 'administrador';
 
   const menuItems = [
-    { path: '/', label: '🏠 Inicio (Home)' },
-    { path: '/dashboard', label: '📊 Dashboard' },
-    { path: '/movimientos', label: '📝 Movimientos' },
-    { path: '/flujo-caja', label: '💰 Flujo de Caja' },
-    { path: '/proyectos', label: '📁 Proyectos' },
-    { path: '/excel', label: '📈 Excel Tiempo Real' },
+    { path: '/', label: ' Inicio (Home)' },
+    { path: '/dashboard', label: ' Dashboard' },
+    { path: '/movimientos', label: ' Movimientos' },
+    { path: '/flujo-caja', label: ' Flujo de Caja' },
+    { path: '/proyectos', label: ' Proyectos' },
+    { path: '/excel', label: ' Excel Tiempo Real' },
     ...(esAdmin ? [
-      { path: '/carga-masiva', label: '📥 Carga Masiva' },
-      { path: '/proyecciones', label: '🔮 Proyecciones' }
+      { path: '/carga-masiva', label: ' Carga Masiva' },
+      { path: '/proyecciones', label: ' Proyecciones' }
     ] : []),
   ];
 

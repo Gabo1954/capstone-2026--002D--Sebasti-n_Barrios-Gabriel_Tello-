@@ -5,7 +5,7 @@ const RealtimeExcel = () => {
   const [pantallaCompleta, setPantallaCompleta] = useState(false);
   const [reloadKey, setReloadKey] = useState(0);
   const [cargandoIframe, setCargandoIframe] = useState(true);
-  const [zoom, setZoom] = useState(0.8); // 80% por defecto para ver más columnas
+  const [zoom, setZoom] = useState(0.8);
 
   const embedUrl = `https://docs.google.com/spreadsheets/d/${DOCUMENT_ID}/edit?rm=minimal`;
   const externalUrl = `https://docs.google.com/spreadsheets/d/${DOCUMENT_ID}/edit`;
@@ -15,7 +15,6 @@ const RealtimeExcel = () => {
     setReloadKey((prev) => prev + 1);
   };
 
-  // Cálculo inverso para que el iframe escalado llene el 100% del contenedor sin dejar espacios vacíos
   const dimensionCompensada = `${(100 / zoom).toFixed(2)}%`;
 
   const wrapperStyle = pantallaCompleta

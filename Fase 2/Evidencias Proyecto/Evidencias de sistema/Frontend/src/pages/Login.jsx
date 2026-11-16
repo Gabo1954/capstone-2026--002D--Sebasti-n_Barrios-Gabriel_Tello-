@@ -24,7 +24,7 @@ export default function Login({ setUsuario }) {
     try {
       const res = await axios.post('http://localhost:3000/api/auth/login', { email, password });
       
-      // En tu backend, res.data contiene directamente el objeto usuario
+
       const usuarioData = res.data.usuario || res.data;
 
       localStorage.setItem('usuarioZoron', JSON.stringify(usuarioData));

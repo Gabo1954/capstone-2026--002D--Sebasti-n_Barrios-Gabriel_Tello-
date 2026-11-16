@@ -22,12 +22,10 @@ export default function CargaMasivaPage() {
   const limpiarNumero = (valor) => {
     if (valor === undefined || valor === null || valor === '') return 0;
     
-    // Si viene como número (ej: 67.334 porque Excel lo interpretó con decimales)
     if (typeof valor === 'number') {
       if (isNaN(valor)) return 0;
       
-      // Si el número tiene decimales pero en CLP no usamos decimales (ej: 67.334),
-      // verificamos si es un caso de punto de mil interpretado como decimal
+
       const strVal = String(valor);
       if (strVal.includes('.') && strVal.split('.')[1].length === 3) {
         return Math.round(valor * 1000);

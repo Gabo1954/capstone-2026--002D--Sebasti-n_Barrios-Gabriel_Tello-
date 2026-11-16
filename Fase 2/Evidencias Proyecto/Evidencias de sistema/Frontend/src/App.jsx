@@ -2,15 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Layout from './components/layout';
 import Login from './pages/Login';
-import Home from './pages/Home'; // Importamos el nuevo Home
+import Home from './pages/Home';
 import Dashboard from './pages/DashboardPage';
 import Movimientos from './pages/MovimientosPage';
 import Proyectos from './pages/ProyectosPage';
 import CargaMasivaPage from './pages/CargaMasivaPage';
 import FlujoCaja from './pages/FlujoCajaPage';
 import Proyecciones from './pages/ProyeccionesPage';
-import RealtimeExcel from './pages/RealtimeExcel'; // Ajusta el nombre de importación al de tu archivo (ej: RealtimeExcel_3)
-
+import RealtimeExcel from './pages/RealtimeExcel'; 
 export default function App() {
   const [usuario, setUsuario] = useState(null);
   const [cargando, setCargando] = useState(true);

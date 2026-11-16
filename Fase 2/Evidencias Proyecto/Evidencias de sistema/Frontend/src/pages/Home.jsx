@@ -25,35 +25,30 @@ export default function Home({ usuario }) {
           desc="Resumen financiero, KPI y gráficos del negocio." 
           ruta="/dashboard" 
           color="#0284C7" 
-          icono="📊"
         />
         <ModuloCard 
           titulo="Movimientos" 
           desc="Registro y control de ingresos y egresos." 
           ruta="/movimientos" 
           color="#166534" 
-          icono="📝"
         />
         <ModuloCard 
           titulo="Flujo de Caja" 
           desc="Matriz semanal de ingresos, egresos y saldos." 
           ruta="/flujo-caja" 
           color="#854D0E" 
-          icono="💰"
         />
         <ModuloCard 
           titulo="Proyectos" 
           desc="Rentabilidad y gestión por centros de costo." 
           ruta="/proyectos" 
           color="#4F46E5" 
-          icono="📁"
         />
         <ModuloCard 
           titulo="Excel Tiempo Real" 
           desc="Visualiza los datos en vivo directamente desde Google Sheets." 
           ruta="/excel" 
           color="#059669" 
-          icono="📈"
         />
 
         {/* Solo mostrar módulos de admin a administradores */}
@@ -64,14 +59,12 @@ export default function Home({ usuario }) {
               desc="Importa datos históricos a PostgreSQL desde Excel." 
               ruta="/carga-masiva" 
               color="#DC2626" 
-              icono="📥"
             />
             <ModuloCard 
               titulo="Proyecciones" 
               desc="Simula escenarios y variables financieras futuras." 
               ruta="/proyecciones" 
               color="#7C3AED" 
-              icono="🔮"
             />
           </>
         )}
