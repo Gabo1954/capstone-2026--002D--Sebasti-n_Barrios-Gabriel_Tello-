@@ -22,7 +22,7 @@ export default function Login({ setUsuario }) {
     }
 
     try {
-      const res = await axios.post('http://localhost:3000/api/auth/login', { email, password });
+      const res = await api.post('/auth/login', { email, password });
       
 
       const usuarioData = res.data.usuario || res.data;

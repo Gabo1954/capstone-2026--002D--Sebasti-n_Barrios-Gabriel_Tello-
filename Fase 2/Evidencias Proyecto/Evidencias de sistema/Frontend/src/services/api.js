@@ -2,12 +2,11 @@ import axios from 'axios';
 
 // Conexión centralizada hacia el Backend en localhost:3000
 const api = axios.create({
-  baseURL: 'http://localhost:3000/api',
+  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:3000/api',
   headers: {
     'Content-Type': 'application/json'
   }
 });
-
 // 1. Limpiador de montos en Pesos Chilenos (ej: "$ 1.250.000" -> 1250000)
 const limpiarMontoCLP = (valor) => {
   if (valor === undefined || valor === null || valor === '') return 0;
